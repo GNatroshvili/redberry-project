@@ -1,0 +1,20 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #8338ec;
+  color: #fff;
+  font-family: FiraGO;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  gap: 4px;
+}
+
+.button:hover {
+  background-color: #b588f4;
+}

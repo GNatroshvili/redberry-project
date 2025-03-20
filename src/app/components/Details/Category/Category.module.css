@@ -1,0 +1,29 @@
+.category {
+  width: 88px;
+  height: 24px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-family: FiraGO;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 100%;
+  color: rgba(255, 255, 255, 1);
+}
+
+.pink {
+  background-color: #ff66a8;
+}
+
+.orange {
+    background-color: #FD9A6A;
+}
+.blue {
+    background-color: #89B6FF;
+}
+
+.yellow {
+    background-color: #FFD86D;
+}

@@ -1,0 +1,16 @@
+.button {
+  padding: 10px 20px;
+  border: 1px solid #8338ec;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+  font-family: FiraGO;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.button:hover {
+  border: 1px solid #b588f4;
+}

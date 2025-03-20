@@ -1,0 +1,22 @@
+.nameWrapper {
+  padding: 10px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 43px;
+  width: 169px;
+  height: 29px;
+  gap: 4px;
+}
+
+.name {
+  color: #343a40;
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  text-align: center;
+  font-family: FiraGO;
+}
