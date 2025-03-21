@@ -1,6 +1,10 @@
 import "@fontsource/firago";
 import "@fontsource/firago/400.css";
 import "@fontsource/firago/400-italic.css";
+import "@fontsource/firago/500.css";
+import "@fontsource/firago/500-italic.css";
+import "@fontsource/firago/700.css";
+import "@fontsource/firago/700-italic.css";
 import styles from "./page.module.css";
 import Header from "./components/Header/Header";
 import ResponseButton from "./components/Buttons/ResponseButton/Button";
