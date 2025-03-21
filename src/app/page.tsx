@@ -1,3 +1,6 @@
+import "@fontsource/firago";
+import "@fontsource/firago/400.css";
+import "@fontsource/firago/400-italic.css";
 import styles from "./page.module.css";
 import Header from "./components/Header/Header";
 import ResponseButton from "./components/Buttons/ResponseButton/Button";
@@ -12,15 +15,15 @@ export default function Home() {
   return (
     <>
       <Header />
-      <ResponseButton title={"უპასუხე"}/>
-      <Category title={"დიზაინი"} color={"orange"}/>
-      <PrimaryButton title={"Button"}/>
-      <Condition title={"დასაწყები"} color={"blue"}/>
-      <EmployeeName name={"სატოში ნაკამოტო"}/>
-      <AddEmployeeButton title={"დაამატე თანამშრომელი"}/>
-      <Difficulty size="big" color="red" text="High Priority" />
-      <Difficulty size="big" color="green" text="Low Priority" />
-      <Difficulty size="small" color="orange" text="Medium Priority" />
+      <ResponseButton title={"უპასუხე"} />
+      <Category title={"დიზაინი"} color={"orange"} />
+      <PrimaryButton title={"Button"} />
+      <Condition title={"დასაწყები"} color={"blue"} />
+      <EmployeeName name={"სატოში ნაკამოტო"} />
+      <AddEmployeeButton title={"დაამატე თანამშრომელი"} />
+      <Difficulty size="big" color="red" text="მაღალი" />
+      <Difficulty size="big" color="green" text="დაბალი" />
+      <Difficulty size="small" color="orange" text="საშუალო" />
     </>
   );
 }

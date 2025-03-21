@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Difficulty.module.css"; // Import the CSS module
+import styles from "./Difficulty.module.css";
 
 const Difficulty = ({ size, color, text }) => {
   const getIcon = () => {
@@ -18,6 +18,7 @@ const Difficulty = ({ size, color, text }) => {
   const getSizeClasses = () => {
     let textColorClass = "";
     let borderClass = "";
+    let containerSizeClass = "";
 
     switch (color) {
       case "red":
@@ -40,18 +41,20 @@ const Difficulty = ({ size, color, text }) => {
 
     switch (size) {
       case "big":
+        containerSizeClass = styles.containerBig;
         return {
           iconClass: styles.iconBig,
           textClass: styles.textBig,
-          gapClass: styles.gapBig,
+          containerSizeClass,
           textColorClass,
           borderClass,
         };
       case "small":
+        containerSizeClass = styles.containerSmall;
         return {
           iconClass: styles.iconSmall,
           textClass: styles.textSmall,
-          gapClass: styles.gapSmall,
+          containerSizeClass,
           textColorClass,
           borderClass,
         };
@@ -59,18 +62,24 @@ const Difficulty = ({ size, color, text }) => {
         return {
           iconClass: styles.iconDefault,
           textClass: styles.textDefault,
-          gapClass: styles.gapDefault,
+          containerSizeClass: "",
           textColorClass,
           borderClass,
         };
     }
   };
 
-  const { iconClass, textClass, gapClass, textColorClass, borderClass } = getSizeClasses();
+  const {
+    iconClass,
+    textClass,
+    containerSizeClass,
+    textColorClass,
+    borderClass,
+  } = getSizeClasses();
   const iconSrc = getIcon();
 
   return (
-    <div className={`${styles.container} ${gapClass} ${borderClass}`}>
+    <div className={`${styles.container} ${containerSizeClass} ${borderClass}`}>
       {iconSrc && (
         <img
           src={iconSrc}
@@ -78,7 +87,6 @@ const Difficulty = ({ size, color, text }) => {
           className={`${styles.icon} ${iconClass}`}
         />
       )}
-
       <span className={`${styles.text} ${textClass} ${textColorClass}`}>
         {text}
       </span>

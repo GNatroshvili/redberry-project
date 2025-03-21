@@ -1,88 +1,181 @@
+/* .container {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.icon {
+}
+
+.iconBig {
+  width: 18px;
+  height: 20px;
+}
+
+.iconSmall {
+  width: 16px;
+  height: 18px;
+}
+
+.iconDefault {
+  width: 24px;
+  height: 18px;
+}
+
+.text {
+}
+
+.textBig {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.textSmall {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.textDefault {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.textRed {
+  color: red;
+}
+
+.textOrange {
+  color: orange;
+}
+
+.textGreen {
+  color: green;
+}
+
+.textDefault {
+  color: black;
+}
+
+.borderRed {
+  border-color: red;
+}
+
+.borderOrange {
+  border-color: orange;
+}
+
+.borderGreen {
+  border-color: green;
+}
+
+.borderDefault {
+  border-color: gray;
+}
+
+.gapBig {
+  gap: 4px;
+}
+
+.gapSmall {
+  gap: 4px;
+}
+
+.gapDefault {
+  gap: 4px;
+} */
+
+
 .container {
-    display: flex;
-    align-items: center;
-    width: fit-content;
-    padding: 8px; 
-    border: 1px solid; 
-    border-radius: 3px; 
-  }
-  
-  .icon {
-  }
-  
-  .iconBig {
-    width: 18px;
-    height: 20px;
-  }
-  
-  .iconSmall {
-    width: 16px;
-    height: 18px;
-  }
-  
-  .iconDefault {
-    width: 24px;
-    height: 18px;
-  }
-  
-  .text {
-  }
-  
-  .textBig {
-    font-size: 16px;
-    font-weight: bold;
-  }
-  
-  .textSmall {
-    font-size: 12px;
-    font-weight: normal;
-  }
-  
-  .textDefault {
-    font-size: 16px;
-    font-weight: normal;
-  }
-  
-  .textRed {
-    color: red;
-  }
-  
-  .textOrange {
-    color: orange;
-  }
-  
-  .textGreen {
-    color: green;
-  }
-  
-  .textDefault {
-    color: black; 
-  }
-  
-  .borderRed {
-    border-color: red;
-  }
-  
-  .borderOrange {
-    border-color: orange;
-  }
-  
-  .borderGreen {
-    border-color: green;
-  }
-  
-  .borderDefault {
-    border-color: gray; 
-  }
-  
-  .gapBig {
-    gap: 15px;
-  }
-  
-  .gapSmall {
-    gap: 8px;
-  }
-  
-  .gapDefault {
-    gap: 10px;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 3px;
+  gap: 4px;
+  box-sizing: border-box;
+}
+
+.containerBig {
+  width: 106px;
+  height: 32px;
+}
+
+.containerSmall {
+  width: 86px;
+  height: 26px;
+}
+
+.icon {
+  /* Add base icon styles if needed */
+}
+
+.iconBig {
+  width: 18px;
+  height: 20px;
+}
+
+.iconSmall {
+  width: 16px;
+  height: 18px;
+}
+
+.iconDefault {
+  width: 24px;
+  height: 18px;
+}
+
+.text {
+  /* Add base text styles if needed */
+}
+
+.textBig {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.textSmall {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.textDefault {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.textRed {
+  color: red;
+}
+
+.textOrange {
+  color: orange;
+}
+
+.textGreen {
+  color: green;
+}
+
+.textDefault {
+  color: black;
+}
+
+.borderRed {
+  border-color: red;
+}
+
+.borderOrange {
+  border-color: orange;
+}
+
+.borderGreen {
+  border-color: green;
+}
+
+.borderDefault {
+  border-color: gray;
+}
