@@ -41,3 +41,11 @@ a {
     color-scheme: dark;
   }
 }
+
+.MuiDatePickerDay-day.Mui-selected {
+  background-color: purple !important;
+}
+
+.MuiDatePickerDay-day.Mui-selected:hover {
+  background-color: #6a1b9a !important;
+}

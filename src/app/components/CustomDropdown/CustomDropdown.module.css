@@ -1,0 +1,46 @@
+.container {
+    position: relative;
+  }
+  
+  .dropdownButton {
+    width: 200px;
+    height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 18px;
+    gap: 8px;
+    border-radius: 10px;
+    border: none;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .dropdownContainer {
+    width: 688px;
+    position: absolute;
+    top: 54px;
+    padding-top: 40px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    border-radius: 10px;
+    border: 0.5px solid rgba(131, 56, 236, 1);
+    background: #fff;
+  }
+  
+  .buttonContainer {
+    align-self: flex-end;
+  }
+  
+  .buttonsContainer {
+    display: flex;
+    gap: 45px;
+    background: #fff;
+    border: 1px solid rgba(222, 226, 230, 1);
+    border-radius: 10px;
+  }

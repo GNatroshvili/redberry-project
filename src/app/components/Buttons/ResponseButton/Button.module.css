@@ -3,7 +3,6 @@
   justify-content: center;
   align-items: center;
   border: none;
-  background-color: #fff;
   color: #8338ec;
   gap: 6px;
   font-family: FiraGO;
@@ -11,6 +10,7 @@
   font-size: 12px;
   line-height: 100%;
   letter-spacing: 0%;
+  background-color: transparent !important;
 }
 
 .button:hover {

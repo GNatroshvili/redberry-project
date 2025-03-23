@@ -1,0 +1,56 @@
+.taskCardWrapper {
+  width: 381px;
+  height: 217px;
+  padding: 20px;
+  color: black;
+  border: 1px solid #ced4da;
+  border-radius: 15px;
+}
+
+.detailsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.leftSide {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contentWrapper {
+  padding-inline: 10.5px;
+}
+
+.title {
+  color: #212529;
+  font-family: FiraGO;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  margin-top: 28px;
+}
+
+.description {
+  color: #343a40;
+  font-family: FiraGO;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  margin-top: 12px
+}
+  
+.addressWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+} 
+
+.commentsWrapper {
+    display: flex;
+    align-items: center;
+    gap:4px;
+}

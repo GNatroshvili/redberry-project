@@ -1,0 +1,61 @@
+/* DatePicker.css */
+.inputWrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .calendarIcon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  
+  /* Flatpickr overrides */
+  .flatpickr-day.selected {
+    background: purple !important;
+    border-color: purple !important;
+    color: white !important;
+    border-radius: 5px;
+  }
+  
+  .flatpickr-day.today {
+    background: purple !important;
+    color: white !important;
+    border-radius: 5px;
+  }
+  
+  #datePicker::placeholder {
+    color: #666;
+  }
+  
+  /* Input base styling */
+  .datePickerInput {
+    padding: 8px 35px 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px; /* Add appropriate width */
+    background-color: #fff;
+    color: #000;
+  }
+
+  .inputWrapper { /* ... */ }
+.calendarIcon { /* ... */ }
+.datePickerInput { /* ... */ }
+
+/* Global Flatpickr overrides */
+:global(.flatpickr-day.selected) {
+  background: purple !important;
+  border-color: purple !important;
+  color: white !important;
+  border-radius: 5px;
+}
+
+:global(.flatpickr-day.today) {
+  background: purple !important;
+  color: white !important;
+  border-radius: 5px;
+}

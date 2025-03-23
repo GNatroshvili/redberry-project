@@ -1,14 +1,12 @@
-import React from 'react'
-import styles from "./PrimaryButton.module.css"
+import React from "react";
+import styles from "./PrimaryButton.module.css";
 
-const PrimaryButton = (props : any) => {
+const PrimaryButton = (props: any) => {
   return (
-    <div>
-        <button className={styles.button}>
-            {props.title}
-        </button>
-    </div>
-  )
-}
+    <button className={styles.button} onClick={props.onClick}>
+      {props.title}
+    </button>
+  );
+};
 
-export default PrimaryButton
+export default PrimaryButton;

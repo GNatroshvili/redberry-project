@@ -1,0 +1,134 @@
+.inputWrapper {
+  width: 741px;
+  min-height: 975px;
+  border: 1px solid #ddd2ff;
+  background-color: #f8f3fe;
+  border-radius: 10px;
+  padding: 40px 45px 52px 45px;
+}
+
+.actionsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 18px 20px 15px 20px;
+}
+
+.input {
+  width: 611px;
+  height: 35px;
+  background-color: #fff;
+  outline: none;
+  color: #898989;
+  box-sizing: border-box;
+  border: none;
+  font-family: FiraGO;
+  font-weight: 350;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.input::placeholder {
+  font-family: FiraGO;
+  font-weight: 350;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.buttonContainer {
+  background-color: #fff;
+  width: 611px;
+  height: 35px;
+}
+
+.commentCount {
+  color: #000;
+  font-family: FiraGO;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.counts {
+  background-color: #8338ec;
+  color: #fff;
+  border-radius: 30px;
+  padding: 2.5px 11px;
+  font-family: FiraGO;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.commentsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 38px;
+}
+
+.commentField {
+  background-color: #f8f3fe;
+}
+
+.authorName {
+  color: #212529;
+  font-family: FiraGO;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.responseField {
+  display: flex;
+  margin-left: 24px;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.text {
+  color: #000;
+  font-family: FiraGO;
+  font-weight: 350;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  margin-top: 8px;
+}
+
+.responseButton {
+  margin-top: 10px;
+}
+
+.test {
+  display: flex;
+  gap: 7px;
+  margin-top: 66px;
+  margin-bottom: 40px;
+}
+
+.responseWrapper {
+  background-color: #fff;
+  padding: 10px;
+}
+
+.response {
+  margin-top: 8px;
+  color: #343a40;
+}
+
+.comment {
+  margin-top: 8px;
+  color: #343a40;
+}
+
+.commentAndAuthor {
+  display: flex;
+  gap: 12px;
+}
