@@ -102,7 +102,7 @@ import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage";
 import api from "./api";
 import { DepartmentType, EmployeeType, PriorityType } from "./types";
-import Departments from "./components/Departments/Departments";
+import Priority from "./components/Priority/Priority";
 
 export default function Home() {
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
@@ -135,7 +135,7 @@ export default function Home() {
         priorities={priorities}
         employees={employees}
       />
-      <Departments />
+      <Priority priorities={priorities} />
     </>
   );
 }
