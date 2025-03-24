@@ -13,3 +13,4 @@ export type EmployeeType = {
     avatar: string
     department_id: number
 }
+

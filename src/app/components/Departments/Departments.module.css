@@ -1,0 +1,16 @@
+.departments {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.checkBox {
+  display: flex;
+  align-items: center;
+}
+
+.employee {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
