@@ -1,0 +1,71 @@
+.title {
+    font-family: FiraGO;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+    letter-spacing: 0%;
+    color: #0d0f10;
+  }
+  
+  .container {
+    width: 550px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 6px;
+  }
+  
+  .dropdownContainer {
+    width: 550px;
+  }
+  
+  .dropdownButton {
+    height: 46px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+    border: none;
+    padding-right: 14px; 
+  }
+  
+  
+  .selectedText {
+    color: #0d0f10;
+    font-family: FiraGO;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0%;
+  }
+  
+  .statusItem {
+    display: flex;
+    flex-direction: column;
+    border: none;
+  }
+  
+  .buttonContent {
+    height: 46px;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    color: #0d0f10;
+    padding: 14px;
+    gap: 6px;
+    font-family: FiraGO;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 100%;
+    letter-spacing: 0%;
+  }
+  
+  .openedContainer {
+    border: 1px solid #8338ec;
+  }
+  
+  .openedTitle {
+    color: #8338ec;
+  }
+  

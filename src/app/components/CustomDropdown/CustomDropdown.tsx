@@ -18,7 +18,6 @@ function CustomDropdown({ departments, employees, priorities }: Props) {
 
   const handleClick = (index: number) => {
     setOpenedId(index === openedId ? -1 : index);
-    console.log(openedId);
   };
 
   const dropdowns = [
@@ -39,6 +38,7 @@ function CustomDropdown({ departments, employees, priorities }: Props) {
             className={styles.dropdownButton}
           >
             <span
+              className={styles.dropDownTitles}
               style={{
                 color: openedId === index ? "rgba(131, 56, 236, 1)" : "#000",
               }}
@@ -56,6 +56,7 @@ function CustomDropdown({ departments, employees, priorities }: Props) {
       {openedId !== -1 && (
         <div className={styles.dropdownContainer}>
           {dropdowns[openedId]?.checkboxes.map((checkbox, index) => {
+            console.log(checkbox.name)
             return (
               <CheckboxWithText key={index.toString()} text={checkbox.name} />
             );

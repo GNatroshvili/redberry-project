@@ -1,45 +1,30 @@
-import styles from "./Priority.module.css";
-import DropdownIcon from "../../icons/DropdownIcon";
-import { PriorityType } from "../../types";
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import DropdownIcon from "../../icons/DropdownIcon";
+import styles from "./Departments.module.css";
+import { DepartmentType } from "../../types";
 
 type Props = {
-  priorities: PriorityType[];
+  departments: DepartmentType[];
 };
-
-function CustomDropdown({ priorities }: Props) {
+function CustomDropdown({ departments }: Props) {
   const [openedId, setOpenedId] = useState(-1);
-  const [selectedPriority, setSelectedPriority] = useState<PriorityType | null>(
+  const [selectedDepartment, setSelectedDepartment] = useState<DepartmentType | null>(
     null
   );
 
   useEffect(() => {
-    const defaultPriority =
-      priorities?.find((p) => p.name === "საშუალო") || priorities?.[0];
-    if (defaultPriority) {
-      setSelectedPriority(defaultPriority);
+    const defaultDepartment =
+    departments?.find((p) => p.name === "საშუალო") || departments?.[0];
+    if (defaultDepartment) {
+        setSelectedDepartment(defaultDepartment);
     }
-  }, [priorities]);
+  }, [departments]);
 
   const handleClick = (index: number) => {
     setOpenedId(index === openedId ? -1 : index);
   };
 
-  const getIconForPriority = (priority: string) => {
-    switch (priority) {
-      case "დაბალი":
-        return "/Low.svg";
-      case "საშუალო":
-        return "/Medium.svg";
-      case "მაღალი":
-        return "/High.svg";
-      default:
-        return "/Medium.svg";
-    }
-  };
-
-  const dropdowns = [{ checkboxes: priorities }];
+  const dropdowns = [{ checkboxes: departments }];
 
   return (
     <div>
@@ -48,7 +33,7 @@ function CustomDropdown({ priorities }: Props) {
           openedId !== -1 ? styles.openedTitle : ""
         }`}
       >
-        პრიორიტეტი<span>*</span>
+        დეპარტამენტი<span>*</span>
       </p>
       <div
         className={`${styles.container} ${
@@ -63,15 +48,9 @@ function CustomDropdown({ priorities }: Props) {
               className={styles.dropdownButton}
             >
               <div className={styles.buttonContent}>
-                {selectedPriority && (
+                {selectedDepartment && (
                   <>
-                    <Image
-                      src={getIconForPriority(selectedPriority.name)}
-                      alt={selectedPriority.name}
-                      width={16}
-                      height={18}
-                    />
-                    <span>{selectedPriority.name}</span>
+                    <span>{selectedDepartment.name}</span>
                   </>
                 )}
               </div>
@@ -86,22 +65,16 @@ function CustomDropdown({ priorities }: Props) {
         {openedId !== -1 && (
           <div className={styles.dropdownContainer}>
             {dropdowns[openedId]?.checkboxes?.map((checkbox, index) => (
-              <div key={index.toString()} className={styles.priorityItem}>
+              <div key={index.toString()} className={styles.statusItem}>
                 <button
                   className={styles.buttonContent}
                   onClick={() => {
                     if (checkbox) {
-                      setSelectedPriority(checkbox);
+                        setSelectedDepartment(checkbox);
                       setOpenedId(-1);
                     }
                   }}
                 >
-                  <Image
-                    src={getIconForPriority(checkbox.name)}
-                    alt={checkbox.name}
-                    width={16}
-                    height={18}
-                  />
                   <p>{checkbox.name}</p>
                 </button>
               </div>

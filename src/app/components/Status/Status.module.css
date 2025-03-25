@@ -26,10 +26,19 @@
   justify-content: space-between;
   background-color: transparent;
   border: none;
-  padding-right: 14px;
+  padding: 14px;
 }
 
-.priorityItem {
+.selectedText {
+  color: #0d0f10;
+  font-family: FiraGO;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.statusItem {
   display: flex;
   flex-direction: column;
   border: none;

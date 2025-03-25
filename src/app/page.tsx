@@ -91,6 +91,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import "@fontsource/firago";
+import "@fontsource/firago/300.css";
+import "@fontsource/firago/300-italic.css";
 import "@fontsource/firago/400.css";
 import "@fontsource/firago/400-italic.css";
 import "@fontsource/firago/500.css";
@@ -101,13 +103,20 @@ import styles from "./page.module.css";
 import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage";
 import api from "./api";
-import { DepartmentType, EmployeeType, PriorityType } from "./types";
+import { DepartmentType, EmployeeType, PriorityType, StatusType } from "./types";
 import Priority from "./components/Priority/Priority";
-
+import Status from "./components/Status/Status";
+import AddEmployeeButton from "./components/Buttons/AddEmployeeButton/AddEmployeeButton";
+import EmployeeTitle from "./components/EmployeeTitle/EmployeeTitle";
+import DepartmentsList from "./components/DepartmentsList/DepartmentsList";
+import UserAvatarUpload from "./components/UserAvatarUpload/UserAvatarUpload";
+import EnterNameField from "./components/InputFields/EnterNameField";
 export default function Home() {
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
   const [departments, setDepartments] = useState<DepartmentType[]>([]);
   const [employees, setEmployees] = useState<EmployeeType[]>([]);
+  const [statuses, setstatuses] = useState<StatusType[]>([]);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -115,10 +124,12 @@ export default function Home() {
         const { data: prioritiesData } = await api.get("/api/priorities");
         const { data: departmentsData } = await api.get("/api/departments");
         const { data: employeesData } = await api.get("/api/employees");
+        const { data: statusesData } = await api.get("/api/statuses");
 
         setPriorities(prioritiesData);
         setDepartments(departmentsData);
         setEmployees(employeesData);
+        setstatuses(statusesData)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -136,6 +147,13 @@ export default function Home() {
         employees={employees}
       />
       <Priority priorities={priorities} />
+      <Status statuses={statuses}/>
+      <AddEmployeeButton title={"დაამატე თანამშრომელი"}/>
+      <EmployeeTitle name={"გელა"} surname={"ბარკალაია"}/>
+      <DepartmentsList departments={departments}
+      />
+      <UserAvatarUpload/>
+      <EnterNameField title={"სახელი*"}/>
     </>
   );
 }
