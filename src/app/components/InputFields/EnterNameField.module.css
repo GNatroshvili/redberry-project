@@ -10,6 +10,14 @@
   color: #121a22;
 }
 
+.inputWrapper {
+  width: 384px;
+  height: 42px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .input {
   width: 384px;
   height: 42px;
@@ -24,6 +32,14 @@
   line-height: 100%;
   letter-spacing: 0%;
   color: #212529;
+  padding: 10px 12.5px;
+}
+
+.verified {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .validations {
