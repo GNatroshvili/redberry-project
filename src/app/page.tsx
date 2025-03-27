@@ -106,17 +106,16 @@ import api from "./api";
 import { DepartmentType, EmployeeType, PriorityType, StatusType } from "./types";
 import Priority from "./components/Priority/Priority";
 import Status from "./components/Status/Status";
-import AddEmployeeButton from "./components/Buttons/AddEmployeeButton/AddEmployeeButton";
-import EmployeeTitle from "./components/EmployeeTitle/EmployeeTitle";
 import DepartmentsList from "./components/DepartmentsList/DepartmentsList";
 import UserAvatarUpload from "./components/UserAvatarUpload/UserAvatarUpload";
 import EnterNameField from "./components/InputFields/EnterNameField";
+import ResponsibleEmployeer from "./components/ResponsibleEmployeer/ResponsibleEmployeer";
+
 export default function Home() {
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
   const [departments, setDepartments] = useState<DepartmentType[]>([]);
   const [employees, setEmployees] = useState<EmployeeType[]>([]);
   const [statuses, setstatuses] = useState<StatusType[]>([]);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -129,7 +128,7 @@ export default function Home() {
         setPriorities(prioritiesData);
         setDepartments(departmentsData);
         setEmployees(employeesData);
-        setstatuses(statusesData)
+        setstatuses(statusesData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -147,13 +146,11 @@ export default function Home() {
         employees={employees}
       />
       <Priority priorities={priorities} />
-      <Status statuses={statuses}/>
-      <AddEmployeeButton title={"დაამატე თანამშრომელი"}/>
-      <EmployeeTitle name={"გელა"} surname={"ბარკალაია"}/>
-      <DepartmentsList departments={departments}
-      />
-      <UserAvatarUpload/>
-      <EnterNameField title={"სახელი*"}/>
+      <Status statuses={statuses} />
+      <DepartmentsList departments={departments} />
+      <UserAvatarUpload />
+      <EnterNameField title={"სახელი*"} />
+      <ResponsibleEmployeer/>
     </>
   );
 }

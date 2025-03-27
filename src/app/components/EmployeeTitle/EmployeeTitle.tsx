@@ -3,14 +3,15 @@ import styles from "./EmployeeTitle.module.css";
 import Image from "next/image";
 
 type Props = {
-    name: string;
-    surname: string;
+  name: string;
+  surname: string;
+  avatar: any;
 };
 
-const EmployeeTitle = ( { name, surname } : Props) => {
+const EmployeeTitle = ({ name, surname, avatar }: Props) => {
   return (
     <div className={styles.container}>
-      <Image src="/avatar.svg" alt="Employee Title" width={28} height={28} />
+      <Image src={avatar} alt={`${name} ${surname}`} width={28} height={28} className={styles.img}/>
       <p className={styles.name}>{name}</p>
       <p className={styles.surname}>{surname}</p>
     </div>

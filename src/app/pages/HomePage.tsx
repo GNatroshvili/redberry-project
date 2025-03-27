@@ -18,7 +18,6 @@
            gap: '1rem',
            flexDirection: 'column',
            padding: '1rem',
-           height: 200
          }}
        >
          <div style={{ display: 'flex', gap: '1rem' }}>

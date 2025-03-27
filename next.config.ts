@@ -1,6 +1,11 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+
+  images : {
+    domains: ['momentum.redberryinternship.ge']
+  },
+
   async rewrites() {
     return [
       {
@@ -12,3 +17,5 @@ const nextConfig: NextConfig = {
 }
 
 export default nextConfig
+
+

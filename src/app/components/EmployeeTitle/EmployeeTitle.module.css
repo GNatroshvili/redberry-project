@@ -12,6 +12,10 @@
   background-color: #f8f9fa;
 }
 
+.img {
+  border-radius: 50%;
+}
+
 .name {
   font-family: FiraGO;
   font-weight: 300;
@@ -30,3 +34,4 @@
   letter-spacing: 0%;
   color: #0d0f10;
 }
+

@@ -6,6 +6,7 @@ import { useState } from "react";
 import CheckboxWithText from "../CheckboxWithText/CheckboxWithText";
 import PrimaryButton from "../Buttons/PrimaryButton/PrimaryButton";
 import styles from "./CustomDropdown.module.css";
+import EmployeeList from "../EmployeeList";
 
 type Props = {
   departments: DepartmentType[];
@@ -55,12 +56,15 @@ function CustomDropdown({ departments, employees, priorities }: Props) {
       </div>
       {openedId !== -1 && (
         <div className={styles.dropdownContainer}>
-          {dropdowns[openedId]?.checkboxes.map((checkbox, index) => {
-            console.log(checkbox.name)
-            return (
+          {openedId === 2 ? (
+            <EmployeeList/>
+          ) : (
+            // Default content
+            dropdowns[openedId]?.checkboxes.map((checkbox, index) => (
               <CheckboxWithText key={index.toString()} text={checkbox.name} />
-            );
-          })}
+            ))
+          )}
+
           <div className={styles.buttonContainer}>
             <PrimaryButton title="არჩევა" />
           </div>
