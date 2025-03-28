@@ -1,3 +1,45 @@
-.container {
+.taskWrapper {
+  max-width: 1680px;
+  margin: auto;
+  border-radius: 4px;
   display: flex;
+  flex-direction: column;
+  gap: 55px;
+  padding: 65px 0 62px 55px;
+  background-color: #FBF9FFA6;
+  border: 0.3px solid #DDD2FF;
+}
+
+.firstLine {
+  display: flex;
+  gap: 161px;
+}
+
+.secondLine {
+  display: flex;
+  gap: 161px;
+}
+
+.thirdLine {
+  display: flex;
+  gap: 161px;
+}
+
+.leftSide {
+  display: flex;
+  gap: 32px;
+}
+
+.rightSide {
+  position: relative;
+  left: 331px;
+  top: 0;
+}
+
+.fourthLine {
+  max-width: 1261px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 161px;
+  margin-top: 90px;
 }

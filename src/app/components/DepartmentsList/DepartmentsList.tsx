@@ -27,7 +27,7 @@ function CustomDropdown({ departments }: Props) {
   const dropdowns = [{ checkboxes: departments }];
 
   return (
-    <div>
+    <div className={styles.departmentsWrapper}>
       <p
         className={`${styles.title} ${
           openedId !== -1 ? styles.openedTitle : ""

@@ -1,5 +1,6 @@
 .box {
   width: 550px;
+  position: relative;
 }
 
 .title {
@@ -9,6 +10,7 @@
   line-height: 100%;
   letter-spacing: 0%;
   color: #0d0f10;
+  
 }
 
 .container {
@@ -16,9 +18,9 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 6px;
-}
-
-.dropdownContainer {
+  position: absolute;
+  background-color: white;
+  z-index: 10;
 }
 
 .dropdownButton {
@@ -84,4 +86,5 @@
 .avatar {
   width: 22px;
   height: 22px;
+  border-radius: 50%;
 }

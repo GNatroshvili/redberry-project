@@ -1,3 +1,7 @@
+.priorityWrapper {
+  position: relative;
+}
+
 .title {
   font-family: FiraGO;
   font-weight: 400;
@@ -12,6 +16,8 @@
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-top: 6px;
+  position: absolute;
+  background-color: #fff;
 }
 
 .dropdownContainer {

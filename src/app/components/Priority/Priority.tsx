@@ -42,7 +42,7 @@ function CustomDropdown({ priorities }: Props) {
   const dropdowns = [{ checkboxes: priorities }];
 
   return (
-    <div>
+    <div className={styles.priorityWrapper}>
       <p
         className={`${styles.title} ${
           openedId !== -1 ? styles.openedTitle : ""

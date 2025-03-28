@@ -10,6 +10,7 @@
   font-size: 16px;
   line-height: 100%;
   letter-spacing: 0%;
+  transition: 0.2s ease;
 }
 
 .button:hover {
