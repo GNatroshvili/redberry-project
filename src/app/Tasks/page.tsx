@@ -6,6 +6,9 @@ import api from "../api";
 import Priority from "../components/Priority/Priority";
 import Status from "../components/Status/Status";
 import DepartmentsList from "../components/Departments/Departments";
+import styles from "./page.module.css";
+import CustomCalendar2 from "../components/CustomCalendar2/DatePicker";
+
 export default function Home() {
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
   const [departments, setDepartments] = useState<DepartmentType[]>([]);
@@ -20,7 +23,8 @@ export default function Home() {
 
         setPriorities(prioritiesData);
         setDepartments(departmentsData);
-        setstatuses(statusesData)
+        setstatuses(statusesData);
+        setDepartments(departmentsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -30,9 +34,11 @@ export default function Home() {
   }, []);
 
   return (
-    <>
+    <div className={styles.container}>
       <Priority priorities={priorities} />
-      <Status statuses={statuses}/>
-    </>
+      <Status statuses={statuses} />
+      {/* <DepartmentsList departments={departments} /> */}
+      <CustomCalendar2 />
+    </div>
   );
 }

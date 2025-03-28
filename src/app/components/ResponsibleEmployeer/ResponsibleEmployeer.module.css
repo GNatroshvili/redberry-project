@@ -1,5 +1,5 @@
 .box {
-    width: 550px;
+  width: 550px;
 }
 
 .title {
@@ -19,7 +19,6 @@
 }
 
 .dropdownContainer {
-  width: 259px;
 }
 
 .dropdownButton {
@@ -31,6 +30,12 @@
   background-color: transparent;
   border: none;
   padding: 14px;
+}
+
+.selectedEmployee {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .selectedText {
@@ -61,6 +66,11 @@
   font-size: 14px;
   line-height: 100%;
   letter-spacing: 0%;
+  transition: 0.2s ease;
+}
+
+.buttonContent:hover {
+  background-color: #f8f9fa;
 }
 
 .openedContainer {
@@ -69,4 +79,9 @@
 
 .openedTitle {
   color: #8338ec;
+}
+
+.avatar {
+  width: 22px;
+  height: 22px;
 }

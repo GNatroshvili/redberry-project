@@ -10,11 +10,11 @@ type Props = {
 
 const EmployeeTitle = ({ name, surname, avatar }: Props) => {
   return (
-    <div className={styles.container}>
+    <button className={styles.container}>
       <Image src={avatar} alt={`${name} ${surname}`} width={28} height={28} className={styles.img}/>
       <p className={styles.name}>{name}</p>
       <p className={styles.surname}>{surname}</p>
-    </div>
+    </button>
   );
 };
 
