@@ -51,30 +51,79 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const [titleInputValue, setTitleInputValue] = useState("");
+  const [descriptionInputValue, setDescriptionInputValue] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState<DepartmentType | null>(null);
+  const [selectedPriorityName, setSelectedPriorityName] = useState<string | null>(null);
+  const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
+
+  const handleTitleInputChange = (value: string) => {
+    setTitleInputValue(value);
+    console.log("Title in Parent:", value);
+  };
+
+  const handleDescriptionInputChange = (value: string) => {
+    setDescriptionInputValue(value);
+    console.log("Description in Parent:", value);
+  };
+
+  const handleDepartmentSelection = (department: DepartmentType) => {
+    setSelectedDepartment(department);
+    console.log("Selected Department in Parent:", department.name);
+  };
+
+  const handlePrioritySelection = (name: string) => {
+    setSelectedPriorityName(name);
+    console.log("Selected Priority in Parent:", name);
+  };
+
+  const handleStatusSelection = (id: number) => {
+    setSelectedStatusId(id);
+    console.log("Selected Status ID in Parent:", id);
+    // You can now use selectedStatusId
+  };
+
+
   return (
     <div className={styles.container}>
       <Header />
       <PageTitle text={"შექმენი ახალი დავალება"} />
       <div className={styles.taskWrapper}>
         <div className={styles.firstLine}>
-          <InputField title="სათაური" width="550px" height="45px" />
-          <DepartmentsList departments={departments} />
+          <InputField title="სათაური" width="550px" height="45px" onInputChange={handleTitleInputChange}
+          />
+          <DepartmentsList departments={departments} onDepartmentSelect={handleDepartmentSelection} />
         </div>
         <div className={styles.secondLine}>
-          <InputField title="აღწერა" width="550px" height="133px" />
+          <InputField title="აღწერა" width="550px" height="133px" onInputChange={handleDescriptionInputChange} />
           <ResponsibleEmployeer />
         </div>
         <div className={styles.thirdLine}>
           <div className={styles.leftSide}>
-            <Priority priorities={priorities} />
-            <Status statuses={statuses} />
+            <Priority priorities={priorities} onPrioritySelect={handlePrioritySelection} />
+            <Status statuses={statuses} onStatusSelect={handleStatusSelection} />
           </div>
           <div className={styles.rightSide}>
             <CustomCalendar2 />
           </div>
         </div>
         <div className={styles.fourthLine}>
-          <CreateTask title={"დავალების შექმნა"} />
+          <div>
+            <button className={styles.button}>
+              შექმნა
+            </button>
+            <p>Title Value in Parent: {titleInputValue}</p>
+            <p>Description Value in Parent: {descriptionInputValue}</p>
+            {selectedDepartment && (
+              <p>Selected Department Name: {selectedDepartment.name}</p>
+            )}
+            {selectedPriorityName && (
+              <p>Selected Priority: {selectedPriorityName}</p>
+            )}
+            {selectedStatusId !== null && (
+              <p>Selected Status ID: {selectedStatusId}</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
