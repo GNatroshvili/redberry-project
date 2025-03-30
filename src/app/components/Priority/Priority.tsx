@@ -123,7 +123,7 @@ import Image from "next/image";
 
 type Props = {
   priorities: PriorityType[];
-  onPrioritySelect?: (priorityName: string) => void; // Callback prop
+  onPrioritySelect?: (priorityId: number) => void; // Callback prop for ID
 };
 
 function CustomDropdown({ priorities, onPrioritySelect }: Props) {
@@ -138,7 +138,7 @@ function CustomDropdown({ priorities, onPrioritySelect }: Props) {
     if (defaultPriority && selectedPriority === null) {
       setSelectedPriority(defaultPriority);
       if (onPrioritySelect) {
-        onPrioritySelect(defaultPriority.name); // Call on mount with default name
+        onPrioritySelect(defaultPriority.id); // Call on mount with default ID
       }
     }
   }, [priorities, onPrioritySelect, selectedPriority]);
@@ -164,7 +164,7 @@ function CustomDropdown({ priorities, onPrioritySelect }: Props) {
     setSelectedPriority(priority);
     setOpenedId(-1);
     if (onPrioritySelect) {
-      onPrioritySelect(priority.name); // Call the callback with the selected priority name
+      onPrioritySelect(priority.id); // Call the callback with the selected priority ID
     }
   };
 

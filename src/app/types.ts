@@ -25,3 +25,19 @@ export type EmployeeType = {
     department_id: number
 }
 
+export type TaskType = {
+    id: number;
+    name: string;
+    description: string;
+    due_date: string | null;
+    department_id: number;
+    status_id: number;
+    priority_id: number;
+    employee_id: number;
+    total_comments: number;
+    department?: DepartmentType; 
+    status?: StatusType; 
+    priority?: PriorityType;
+    employee?: EmployeeType; 
+  };
+

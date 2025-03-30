@@ -1,30 +1,10 @@
-// import React from 'react'
-// import styles from "./Button.module.css"
-
-// type Props = {
-//   title : any,
-// }
-
-// const Button = ( { title } : Props ) => {
-//   return (
-//     <div>
-//       <button className={styles.button}>
-//         <img src="/add-icon.svg" alt="plus-icon" />
-//         {title}
-//       </button>
-//     </div>
-//   )
-// }
-
-// export default Button
-
 import React from 'react';
 import styles from "./Button.module.css";
 import Link from 'next/link'; 
 
 type Props = {
   title: React.ReactNode; 
-  href: string;
+  href?: string;
 };
 
 const Button = ({ title, href }: Props) => {

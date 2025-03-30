@@ -167,13 +167,130 @@
 
 // export default CustomDropdown;
 
+// import React, { useState, useEffect } from "react";
+// import styles from "./ResponsibleEmployeer.module.css";
+// import DropdownIcon from "../../icons/DropdownIcon";
+// import { EmployeeType } from "../../types";
+// import AddEmployeeButton from "../Buttons/AddEmployeeButton/AddEmployeeButton";
+
+// function CustomDropdown() {
+//   const [opened, setOpened] = useState(false);
+//   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeType | null>(
+//     null
+//   );
+//   const [employees, setEmployees] = useState<EmployeeType[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const fetchEmployees = async () => {
+//       try {
+//         const res = await fetch(
+//           "https://momentum.redberryinternship.ge/api/employees",
+//           {
+//             headers: {
+//               Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
+//             },
+//           }
+//         );
+
+//         if (!res.ok) throw new Error("Failed to fetch employees");
+
+//         const data = await res.json();
+//         setEmployees(data);
+//       } catch (err) {
+//         setError((err as Error).message);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchEmployees();
+//   }, []);
+
+//   const handleSelectEmployee = (employee: EmployeeType) => {
+//     setSelectedEmployee(employee); // Set selected employee
+//     setOpened(false); // Close dropdown
+//   };
+
+//   return (
+//     <div className={styles.box}>
+//       <p className={styles.title}>
+//         პასუხისმგებელი თანამშრომელი<span>*</span>
+//       </p>
+//       <div className={styles.container}>
+//         <button
+//           className={styles.dropdownButton}
+//           onClick={() => setOpened(!opened)}
+//         >
+//           <span className={styles.selectedText}>
+//             {selectedEmployee ? (
+//               <div className={styles.selectedEmployee}>
+//                 <img
+//                   src={selectedEmployee.avatar}
+//                   alt={selectedEmployee.name}
+//                   className={styles.avatar}
+//                 />
+//                 {selectedEmployee.name} {selectedEmployee.surname} 
+//               </div>
+//             ) : (
+//               "დასაწყები"
+//             )}
+//           </span>
+//           <div
+//             style={{ transform: opened ? "rotate(180deg)" : "rotate(0deg)" }}
+//           >
+//             <DropdownIcon fill={opened ? "rgba(131, 56, 236, 1)" : "#000"} />
+//           </div>
+//         </button>
+
+//         {opened && (
+//           <div className={styles.dropdownContainer}>
+//             <AddEmployeeButton title={"დაამატე თანამშრომელი"} />
+
+//             {loading ? (
+//               <p>Loading...</p>
+//             ) : error ? (
+//               <p>Error: {error}</p>
+//             ) : (
+//               employees.map((employee) => (
+//                 <div key={employee.id} className={styles.statusItem}>
+//                   <button
+//                     className={styles.buttonContent}
+//                     onClick={() => handleSelectEmployee(employee)}
+//                   >
+//                     <img
+//                       src={employee.avatar}
+//                       alt={employee.name}
+//                       className={styles.avatar}
+//                     />
+//                     <p>
+//                       {employee.name} {employee.surname} {employee.id}
+//                     </p>
+//                   </button>
+//                 </div>
+//               ))
+//             )}
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default CustomDropdown;
+
 import React, { useState, useEffect } from "react";
 import styles from "./ResponsibleEmployeer.module.css";
 import DropdownIcon from "../../icons/DropdownIcon";
 import { EmployeeType } from "../../types";
 import AddEmployeeButton from "../Buttons/AddEmployeeButton/AddEmployeeButton";
 
-function CustomDropdown() {
+type Props = {
+  onEmployeeSelect?: (employeeId: number) => void; // Callback prop for ID
+};
+
+function CustomDropdown({ onEmployeeSelect }: Props) {
   const [opened, setOpened] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeType | null>(
     null
@@ -211,6 +328,9 @@ function CustomDropdown() {
   const handleSelectEmployee = (employee: EmployeeType) => {
     setSelectedEmployee(employee); // Set selected employee
     setOpened(false); // Close dropdown
+    if (onEmployeeSelect) {
+      onEmployeeSelect(employee.id); // Call the callback with employee.id
+    }
   };
 
   return (
@@ -234,7 +354,7 @@ function CustomDropdown() {
                 {selectedEmployee.name} {selectedEmployee.surname}
               </div>
             ) : (
-              "დასაწყები"
+              "აირჩიეთ თანამშრომელი" // Changed default text
             )}
           </span>
           <div

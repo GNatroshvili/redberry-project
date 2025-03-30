@@ -1,4 +1,7 @@
 .taskCardWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 381px;
   height: 217px;
   padding: 20px;
@@ -17,6 +20,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.dueDate {
+  font-family: FiraGO;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #212529;
 }
 
 .contentWrapper {
@@ -40,17 +52,39 @@
   font-size: 14px;
   line-height: 100%;
   letter-spacing: 0%;
-  margin-top: 12px
+  margin-top: 12px;
 }
-  
+
 .addressWrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 28px;
-} 
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+}
 
 .commentsWrapper {
-    display: flex;
-    align-items: center;
-    gap:4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.borderYellow {
+  border: 1px solid #F7BC30; 
+}
+
+.borderOrange {
+  border: 1px solid #FB5607;
+}
+
+.borderPink {
+  border: 1px solid #FF006E; 
+}
+
+.borderBlue {
+  border: 1px solid #3A86FF;
 }

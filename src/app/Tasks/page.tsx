@@ -22,15 +22,15 @@ import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
 import ResponsibleEmployeer from "../components/ResponsibleEmployeer/ResponsibleEmployeer";
 import InputField from "../components/InputField/InputField";
 import PageTitle from "../components/PageTitle/PageTitle";
-import Header from "../components/Header/Header"
+import Header from "../components/Header/Header";
 import CreateTask from "../components/Buttons/CreateTask/Button";
-
-
 
 export default function Home() {
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
   const [departments, setDepartments] = useState<DepartmentType[]>([]);
   const [statuses, setstatuses] = useState<StatusType[]>([]);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -45,6 +45,7 @@ export default function Home() {
         setDepartments(departmentsData);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setErrorMessage("Error fetching initial data.");
       }
     }
 
@@ -53,9 +54,16 @@ export default function Home() {
 
   const [titleInputValue, setTitleInputValue] = useState("");
   const [descriptionInputValue, setDescriptionInputValue] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState<DepartmentType | null>(null);
-  const [selectedPriorityName, setSelectedPriorityName] = useState<string | null>(null);
+  const [selectedDepartment, setSelectedDepartment] =
+    useState<DepartmentType | null>(null);
+  const [selectedPriorityId, setSelectedPriorityId] = useState<number | null>(
+    null
+  );
   const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    null
+  );
+  const [selectedDeadline, setSelectedDeadline] = useState<Date | null>(null);
 
   const handleTitleInputChange = (value: string) => {
     setTitleInputValue(value);
@@ -72,17 +80,86 @@ export default function Home() {
     console.log("Selected Department in Parent:", department.name);
   };
 
-  const handlePrioritySelection = (name: string) => {
-    setSelectedPriorityName(name);
-    console.log("Selected Priority in Parent:", name);
+  const handlePrioritySelection = (id: number) => {
+    setSelectedPriorityId(id);
+    console.log("Selected Priority ID in Parent:", id);
   };
 
   const handleStatusSelection = (id: number) => {
     setSelectedStatusId(id);
     console.log("Selected Status ID in Parent:", id);
-    // You can now use selectedStatusId
   };
 
+  const handleEmployeeIdSelection = (id: number) => {
+    setSelectedEmployeeId(id);
+    console.log("Selected Employee ID:", id);
+  };
+
+  const handleDeadlineChange = (date: Date | null) => {
+    setSelectedDeadline(date);
+    console.log("Selected Deadline:", date);
+  };
+
+  const formatDateForDisplay = (date: Date | null): string => {
+    if (!date) return ""; 
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleCreateTask = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+    setErrorMessage(null);
+
+    const dueDate = selectedDeadline ? formatDateForDisplay(selectedDeadline) : null;
+
+    const taskData = {
+      name: titleInputValue,
+      description: descriptionInputValue,
+      due_date: dueDate,
+      status_id: selectedStatusId,
+      employee_id: selectedEmployeeId,
+      priority_id: selectedPriorityId,
+      department_id: selectedDepartment?.id, 
+    };
+
+    try {
+      const res = await fetch(
+        "https://momentum.redberryinternship.ge/api/tasks",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
+          },
+          body: JSON.stringify(taskData),
+        }
+      );
+
+      const result = await res.json();
+
+      if (res.ok) {
+        console.log("Task created successfully:", result);
+        setSuccessMessage("Task created successfully!");
+        setTitleInputValue("");
+        setDescriptionInputValue("");
+        setSelectedDepartment(null);
+        setSelectedPriorityId(null);
+        setSelectedStatusId(null);
+        setSelectedEmployeeId(null);
+        setSelectedDeadline(null);
+      } else {
+        console.error("Error creating task:", result);
+        setErrorMessage(`Failed to create task. ${result?.message || "Please check the form data."}`);
+      }
+    } catch (err) {
+      console.error("Error sending form data:", err);
+      setErrorMessage("An unexpected error occurred while creating the task.");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -90,38 +167,71 @@ export default function Home() {
       <PageTitle text={"შექმენი ახალი დავალება"} />
       <div className={styles.taskWrapper}>
         <div className={styles.firstLine}>
-          <InputField title="სათაური" width="550px" height="45px" onInputChange={handleTitleInputChange}
+          <InputField
+            title="სათაური"
+            width="550px"
+            height="45px"
+            onInputChange={handleTitleInputChange}
           />
-          <DepartmentsList departments={departments} onDepartmentSelect={handleDepartmentSelection} />
+          <DepartmentsList
+            departments={departments}
+            onDepartmentSelect={handleDepartmentSelection}
+          />
         </div>
         <div className={styles.secondLine}>
-          <InputField title="აღწერა" width="550px" height="133px" onInputChange={handleDescriptionInputChange} />
-          <ResponsibleEmployeer />
+          <InputField
+            title="აღწერა"
+            width="550px"
+            height="133px"
+            onInputChange={handleDescriptionInputChange}
+          />
+          <ResponsibleEmployeer onEmployeeSelect={handleEmployeeIdSelection} />
         </div>
         <div className={styles.thirdLine}>
           <div className={styles.leftSide}>
-            <Priority priorities={priorities} onPrioritySelect={handlePrioritySelection} />
-            <Status statuses={statuses} onStatusSelect={handleStatusSelection} />
+            <Priority
+              priorities={priorities}
+              onPrioritySelect={handlePrioritySelection}
+            />
+            <Status
+              statuses={statuses}
+              onStatusSelect={handleStatusSelection}
+            />
           </div>
           <div className={styles.rightSide}>
-            <CustomCalendar2 />
+            <CustomCalendar2 onDateChange={handleDeadlineChange} />
           </div>
         </div>
         <div className={styles.fourthLine}>
           <div>
-            <button className={styles.button}>
+            <button
+              className={styles.button}
+              onClick={handleCreateTask}
+            >
               შექმნა
             </button>
+            {successMessage && (
+              <p style={{ color: "green" }}>{successMessage}</p>
+            )}
+            {errorMessage && (
+              <p style={{ color: "red" }}>{errorMessage}</p>
+            )}
             <p>Title Value in Parent: {titleInputValue}</p>
             <p>Description Value in Parent: {descriptionInputValue}</p>
             {selectedDepartment && (
               <p>Selected Department Name: {selectedDepartment.name}</p>
             )}
-            {selectedPriorityName && (
-              <p>Selected Priority: {selectedPriorityName}</p>
+            {selectedPriorityId !== null && (
+              <p>Selected Priority ID: {selectedPriorityId}</p>
             )}
             {selectedStatusId !== null && (
               <p>Selected Status ID: {selectedStatusId}</p>
+            )}
+            {selectedEmployeeId !== null && (
+              <p>Selected Employee ID: {selectedEmployeeId}</p>
+            )}
+            {selectedDeadline && (
+              <p>Selected Deadline: {formatDateForDisplay(selectedDeadline)}</p>
             )}
           </div>
         </div>
