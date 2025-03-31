@@ -82,11 +82,10 @@
   box-shadow: 0 12px 24px #0003;
 }
 .calendarHeader {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 40px 100px;
   width: 100%;
-  display: flex;
 }
 .monthDisplay {
   color: #000;

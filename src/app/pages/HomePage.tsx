@@ -1,11 +1,12 @@
 "use client";
-import CustomDropdown from '../components/CustomDropdown/CustomDropdown';
-import { DepartmentType, EmployeeType, PriorityType, TaskType } from '../types';
+import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
+import { DepartmentType, EmployeeType, PriorityType, TaskType } from "../types";
 import Condition from "../components/Condition/Condition";
 import styles from "./HomePage.module.css";
-import TaskCard from '../components/TaskCard/TaskCard';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import TaskCard from "../components/TaskCard/TaskCard";
+import React, { useState, useEffect } from "react";
+import EmployeeName from "../components/EmployeeName/EmployeeName";
+import axios from "axios";
 
 type Props = {
   departments: DepartmentType[];
@@ -36,13 +37,16 @@ function HomePage({ departments, priorities, employees }: Props) {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get('https://momentum.redberryinternship.ge/api/tasks', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${'9e882e2f-3297-435e-b537-67817136c385'}`,
-          },
-        });
+        const response = await axios.get(
+          "https://momentum.redberryinternship.ge/api/tasks",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${"9e882e2f-3297-435e-b537-67817136c385"}`,
+            },
+          }
+        );
 
         console.log("API Response:", response.data);
         console.log(Array.isArray(response.data));
@@ -70,19 +74,20 @@ function HomePage({ departments, priorities, employees }: Props) {
     <div>
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           margin: "auto",
           maxWidth: "1680px",
         }}
       >
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: "flex", gap: "1rem" }}>
           <CustomDropdown
             departments={departments}
             priorities={priorities}
             employees={employees}
           />
         </div>
+        <EmployeeName name={"hello"} />
         <div className={styles.conditionWrapper}>
           <Condition title={"დასაწყები"} color={"yellow"} />
           <Condition title={"პროგრესში"} color={"orange"} />
@@ -92,29 +97,49 @@ function HomePage({ departments, priorities, employees }: Props) {
         <div className={styles.taskCardsContainer}>
           <div className={styles.taskLine}>
             {loading && <p>Loading tasks...</p>}
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            {!loading && !error && tasksByStatus[1].map((task) => (
-              <TaskCard key={task.id} task={task} />
-            ))}
-            {!loading && !error && tasksByStatus[1].length === 0 && tasks.length > 0 && <p>No tasks in "დასაწყები"</p>}
+            {error && <p style={{ color: "red" }}>Error: {error}</p>}
+            {!loading &&
+              !error &&
+              tasksByStatus[1].map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            {!loading &&
+              !error &&
+              tasksByStatus[1].length === 0 &&
+              tasks.length > 0 && <p>No tasks in "დასაწყები"</p>}
           </div>
           <div className={styles.taskLine}>
-            {!loading && !error && tasksByStatus[2].map((task) => (
-              <TaskCard key={task.id} task={task} />
-            ))}
-            {!loading && !error && tasksByStatus[2].length === 0 && tasks.length > 0 && <p>No tasks in "პროგრესში"</p>}
+            {!loading &&
+              !error &&
+              tasksByStatus[2].map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            {!loading &&
+              !error &&
+              tasksByStatus[2].length === 0 &&
+              tasks.length > 0 && <p>No tasks in "პროგრესში"</p>}
           </div>
           <div className={styles.taskLine}>
-            {!loading && !error && tasksByStatus[3].map((task) => (
-              <TaskCard key={task.id} task={task} />
-            ))}
-            {!loading && !error && tasksByStatus[3].length === 0 && tasks.length > 0 && <p>No tasks in "მზად ტესტირებისთვის"</p>}
+            {!loading &&
+              !error &&
+              tasksByStatus[3].map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            {!loading &&
+              !error &&
+              tasksByStatus[3].length === 0 &&
+              tasks.length > 0 && <p>No tasks in "მზად ტესტირებისთვის"</p>}
           </div>
           <div className={styles.taskLine}>
-            {!loading && !error && tasksByStatus[4].map((task) => (
-              <TaskCard key={task.id} task={task} />
-            ))}
-            {!loading && !error && tasksByStatus[4].length === 0 && tasks.length > 0 && <p>No tasks in "დასრულებული"</p>}
+            {!loading &&
+              !error &&
+              tasksByStatus[4].map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            {!loading &&
+              !error &&
+              tasksByStatus[4].length === 0 &&
+              tasks.length > 0 && <p>No tasks in "დასრულებული"</p>}
           </div>
           {!loading && !error && tasks.length === 0 && <p>No tasks found.</p>}
         </div>

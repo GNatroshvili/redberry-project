@@ -163,7 +163,9 @@ const TaskCard = ({ task, borderColor }: Props) => {
           />
         </div>
         <div className={styles.rightSide}>
-          <span className={styles.dueDate}>{formatDateGeorgian(task.due_date)}</span>
+          <span className={styles.dueDate}>
+            {formatDateGeorgian(task.due_date)}
+          </span>
         </div>
       </div>
       <div className={styles.contentWrapper}>
@@ -178,7 +180,7 @@ const TaskCard = ({ task, borderColor }: Props) => {
           className={styles.img}
         />
         <div className={styles.commentsWrapper}>
-          <img src="/comments.svg" alt="comments-icon" />
+          <img src="/Comments.svg" alt="comments-icon" />
           <span>{task.total_comments}</span>
         </div>
       </div>

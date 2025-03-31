@@ -59,7 +59,6 @@ function CustomDropdown({ departments, employees, priorities }: Props) {
           {openedId === 2 ? (
             <EmployeeList/>
           ) : (
-            // Default content
             dropdowns[openedId]?.checkboxes.map((checkbox, index) => (
               <CheckboxWithText key={index.toString()} text={checkbox.name} />
             ))

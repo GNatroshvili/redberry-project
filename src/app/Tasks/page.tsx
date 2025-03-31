@@ -18,12 +18,10 @@ import Status from "../components/Status/Status";
 import DepartmentsList from "../components/DepartmentsList/DepartmentsList";
 import styles from "./page.module.css";
 import CustomCalendar2 from "../components/CustomCalendar2/DatePicker";
-import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
 import ResponsibleEmployeer from "../components/ResponsibleEmployeer/ResponsibleEmployeer";
 import InputField from "../components/InputField/InputField";
 import PageTitle from "../components/PageTitle/PageTitle";
 import Header from "../components/Header/Header";
-import CreateTask from "../components/Buttons/CreateTask/Button";
 
 export default function Home() {
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
