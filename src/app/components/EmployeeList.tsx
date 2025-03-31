@@ -2,7 +2,6 @@
 // import Image from 'next/image';
 // import { EmployeeType } from '../types';
 
-
 // const EmployeeList = () => {
 //   const [employees, setEmployees] = useState<EmployeeType[]>([]);
 //   const [loading, setLoading] = useState(true);
@@ -51,7 +50,12 @@ import { useEffect, useState } from "react";
 import { EmployeeType } from "../types";
 import EmployeeTitle from "../components/EmployeeTitle/EmployeeTitle";
 
-const EmployeeList = () => {
+type Props = {
+  selectedValues: { [key: string]: boolean };
+  onSelect: (name: string) => void;
+};
+
+const EmployeeList = ({ selectedValues, onSelect }: Props) => {
   const [employees, setEmployees] = useState<EmployeeType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +97,8 @@ const EmployeeList = () => {
           name={employee.name}
           surname={employee.surname}
           avatar={employee.avatar}
+          isChecked={selectedValues[employee.name] || false}
+          onChange={() => onSelect(employee.name)}
         />
       ))}
     </div>

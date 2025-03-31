@@ -1,20 +1,33 @@
-import React from "react";
-import styles from "./EmployeeTitle.module.css";
-import Image from "next/image";
+import CustomCheckbox from "../CustomCheckbox/CustomCheckbox";
 
 type Props = {
   name: string;
   surname: string;
-  avatar: any;
+  avatar: string;
+  isChecked: boolean;
+  onChange: () => void;
 };
 
-const EmployeeTitle = ({ name, surname, avatar }: Props) => {
+const EmployeeTitle = ({
+  name,
+  surname,
+  avatar,
+  isChecked,
+  onChange,
+}: Props) => {
   return (
-    <button className={styles.container}>
-      <Image src={avatar} alt={`${name} ${surname}`} width={28} height={28} className={styles.img}/>
-      <p className={styles.name}>{name}</p>
-      <p className={styles.surname}>{surname}</p>
-    </button>
+    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      {/* Checkbox for selecting employee */}
+      <CustomCheckbox isChecked={isChecked} handleChange={onChange} />
+
+      {/* Employee's avatar */}
+      <img src={avatar} alt={`${name} ${surname}`} width={28} height={28} />
+
+      {/* Employee's name */}
+      <span>
+        {name} {surname}
+      </span>
+    </div>
   );
 };
 
