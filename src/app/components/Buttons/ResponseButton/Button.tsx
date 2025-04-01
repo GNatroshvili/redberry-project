@@ -6,7 +6,7 @@ const Button = (props: any) => {
   return (
     <div>
       <button 
-        className={clsx(styles.button, props.className)} // ✅ Apply extra className with clsx
+        className={clsx(styles.button, props.className)} 
         onClick={props.onClick}
       >
         <img src="/arrow.svg" alt="" className={styles.img} />

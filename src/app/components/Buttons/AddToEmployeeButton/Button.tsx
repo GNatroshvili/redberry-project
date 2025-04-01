@@ -1,11 +1,15 @@
 import React from 'react'
 import styles from "./Button.module.css"
 
-const Button = (props) => {
+type Props = {
+  title : any
+}
+
+const Button = ({title} : Props) => {
   return (
     <div>
         <button className={styles.button}>
-            {props.title}
+            {title}
         </button>
     </div>
   )

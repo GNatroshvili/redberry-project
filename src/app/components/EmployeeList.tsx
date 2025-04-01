@@ -46,6 +46,7 @@
 // };
 
 // export default EmployeeList;
+
 import { useEffect, useState } from "react";
 import { EmployeeType } from "../types";
 import EmployeeTitle from "../components/EmployeeTitle/EmployeeTitle";
@@ -97,8 +98,8 @@ const EmployeeList = ({ selectedValues, onSelect }: Props) => {
           name={employee.name}
           surname={employee.surname}
           avatar={employee.avatar}
-          isChecked={selectedValues[employee.name] || false}
-          onChange={() => onSelect(employee.name)}
+          isChecked={selectedValues[employee.id] || false} // Use ID
+          onChange={() => onSelect(employee.id)} // Use ID
         />
       ))}
     </div>
@@ -106,3 +107,31 @@ const EmployeeList = ({ selectedValues, onSelect }: Props) => {
 };
 
 export default EmployeeList;
+
+// "use client";
+// import { EmployeeType } from "../types";
+// import CheckboxWithText from "./CheckboxWithText/CheckboxWithText";
+
+// type Props = {
+//   employees: EmployeeType[];
+//   selectedValues: number[];
+//   onSelect: (id: number) => void;
+// };
+
+// const EmployeeList = ({ employees, selectedValues, onSelect }: Props) => {
+//   return (
+//     <div>
+//       {employees.map((employee) => (
+//         <CheckboxWithText
+//           key={employee.id}
+//           text={employee.name}
+//           hasImage={true}
+//           isChecked={selectedValues.includes(employee.id)}
+//           onChange={() => onSelect(employee.id)}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default EmployeeList;

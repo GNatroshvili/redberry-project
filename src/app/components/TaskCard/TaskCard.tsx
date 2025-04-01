@@ -134,7 +134,6 @@ const TaskCard = ({ task, borderColor }: Props) => {
   };
 
   const getBorderColorStyle = () => {
-    console.log("Task Status ID:", task.status?.id);
     switch (task.status?.id) {
       case 1:
         return styles.borderYellow;

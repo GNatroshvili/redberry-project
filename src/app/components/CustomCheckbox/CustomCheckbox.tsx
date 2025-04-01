@@ -25,8 +25,8 @@ const CustomCheckbox = ({
   handleChange,
 }: {
   color?: TagColor;
-  isChecked: boolean;
-  handleChange: () => void;
+  isChecked?: boolean;
+  handleChange?: () => void;
 }) => {
   return (
     <button className={styles.container} onClick={handleChange}>

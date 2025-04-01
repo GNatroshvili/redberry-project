@@ -1,6 +1,6 @@
 interface CheckboxIconProps {
     stroke: string
-    checked: boolean
+    checked?: boolean
   }
   
   const CheckboxIcon: React.FC<CheckboxIconProps> = ({ stroke, checked }) => (

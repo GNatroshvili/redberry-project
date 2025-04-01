@@ -1,22 +1,33 @@
-.nameWrapper {
-  padding: 10px 6px;
+.filtersContainer {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.filterWrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  border: 1px solid #ced4da;
-  border-radius: 43px;
-  width: 169px;
-  height: 29px;
-  gap: 4px;
+  gap: 8px;
+  background: transparent;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid #CED4DA;
 }
 
 .name {
-  color: #343a40;
-  font-family: Inter;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 100%;
-  text-align: center;
-  font-family: FiraGO;
+  margin: 0;
+}
+
+.deleteIcon {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.deleteIcon:hover {
+  opacity: 1;
 }
