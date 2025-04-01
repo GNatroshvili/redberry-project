@@ -99,7 +99,7 @@ const EmployeeList = ({ selectedValues, onSelect }: Props) => {
           surname={employee.surname}
           avatar={employee.avatar}
           isChecked={selectedValues[employee.id] || false} // Use ID
-          onChange={() => onSelect(employee.id)} // Use ID
+          onChange={() => onSelect(employee.id.toString())} // Use ID
         />
       ))}
     </div>

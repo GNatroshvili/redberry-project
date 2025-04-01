@@ -7,6 +7,7 @@ type Color = "pink" | "orange" | "blue" | "yellow";
 type Props = {
   title: string;
   color: Color;
+  count: number;
 };
 
 

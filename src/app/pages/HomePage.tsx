@@ -163,7 +163,7 @@ import axios from "axios";
 type SelectedFilter = {
   id: number;
   name: string;
-  type: 'department' | 'priority' | 'employee';
+  type: "department" | "priority" | "employee";
 };
 
 type Props = {
@@ -185,15 +185,15 @@ function HomePage({ departments, priorities, employees }: Props) {
     async function fetchTasks() {
       setLoading(true);
       setError(null);
-      
+
       try {
         const response = await axios.get(
           "https://momentum.redberryinternship.ge/api/tasks",
           {
             headers: {
               "Content-Type": "application/json",
-              "Accept": "application/json",
-              "Authorization": `Bearer 9e882e2f-3297-435e-b537-67817136c385`,
+              Accept: "application/json",
+              Authorization: `Bearer 9e882e2f-3297-435e-b537-67817136c385`,
             },
           }
         );
@@ -206,7 +206,12 @@ function HomePage({ departments, priorities, employees }: Props) {
         }
       } catch (err) {
         console.error("Error fetching tasks:", err);
-        setError(err.message || "Failed to fetch tasks. Please try again.");
+        if (err instanceof Error) {
+          setError(err.message || "Failed to fetch tasks. Please try again.");
+        } else {
+          setError("An unexpected error occurred.");
+          console.error("Unexpected error:", err);
+        }
       } finally {
         setLoading(false);
       }
@@ -215,22 +220,27 @@ function HomePage({ departments, priorities, employees }: Props) {
     fetchTasks();
   }, []);
 
-  const handleRemoveFilter = (id: number, type: 'department' | 'priority' | 'employee') => {
+  const handleRemoveFilter = (
+    id: number,
+    type: "department" | "priority" | "employee"
+  ) => {
     // Update the specific filter state
     switch (type) {
-      case 'department':
-        setSelectedDepartments(prev => prev.filter(item => item !== id));
+      case "department":
+        setSelectedDepartments((prev) => prev.filter((item) => item !== id));
         break;
-      case 'priority':
-        setSelectedPriorities(prev => prev.filter(item => item !== id));
+      case "priority":
+        setSelectedPriorities((prev) => prev.filter((item) => item !== id));
         break;
-      case 'employee':
-        setSelectedEmployees(prev => prev.filter(item => item !== id));
+      case "employee":
+        setSelectedEmployees((prev) => prev.filter((item) => item !== id));
         break;
     }
-    
+
     // Update the selected filters display
-    setSelectedFilters(prev => prev.filter(f => f.id !== id || f.type !== type));
+    setSelectedFilters((prev) =>
+      prev.filter((f) => f.id !== id || f.type !== type)
+    );
   };
 
   const handleFilterApply = (
@@ -239,29 +249,29 @@ function HomePage({ departments, priorities, employees }: Props) {
   ) => {
     // Get names for the selected IDs
     const getName = (id: number): string => {
-      if (type === 'department') {
-        return departments.find(d => d.id === id)?.name || '';
-      } else if (type === 'priority') {
-        return priorities.find(p => p.id === id)?.name || '';
+      if (type === "department") {
+        return departments.find((d) => d.id === id)?.name || "";
+      } else if (type === "priority") {
+        return priorities.find((p) => p.id === id)?.name || "";
       } else {
-        const emp = employees.find(e => e.id === id);
-        return emp ? `${emp.name} ${emp.surname}` : '';
+        const emp = employees.find((e) => e.id === id);
+        return emp ? `${emp.name} ${emp.surname}` : "";
       }
     };
-  
+
     // Update selected filters state
-    setSelectedFilters(prev => {
+    setSelectedFilters((prev) => {
       // Remove existing filters of this type
-      const otherFilters = prev.filter(f => f.type !== type);
+      const otherFilters = prev.filter((f) => f.type !== type);
       // Add new filters
-      const newFilters = ids.map(id => ({
+      const newFilters = ids.map((id) => ({
         id,
         name: getName(id),
-        type
+        type,
       }));
       return [...otherFilters, ...newFilters];
     });
-  
+
     // Update the existing filter state
     switch (type) {
       case "department":
@@ -290,17 +300,28 @@ function HomePage({ departments, priorities, employees }: Props) {
     return departmentMatch && priorityMatch && employeeMatch;
   });
 
+  interface TasksByStatus {
+    [key: string]: TaskType[];
+  }
+
   // Group filtered tasks by status
   const tasksByStatus = {
-    1: filteredTasks.filter((task) => task.status?.id === 1),
-    2: filteredTasks.filter((task) => task.status?.id === 2),
-    3: filteredTasks.filter((task) => task.status?.id === 3),
-    4: filteredTasks.filter((task) => task.status?.id === 4),
-  };
+    "1": filteredTasks.filter((task) => task.status?.id === 1),
+    "2": filteredTasks.filter((task) => task.status?.id === 2),
+    "3": filteredTasks.filter((task) => task.status?.id === 3),
+    "4": filteredTasks.filter((task) => task.status?.id === 4),
+  } as TasksByStatus;
 
   return (
     <div>
-      <div style={{ display: "flex", flexDirection: "column", margin: "auto", maxWidth: "1680px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          margin: "auto",
+          maxWidth: "1680px",
+        }}
+      >
         <div style={{ display: "flex", gap: "1rem" }}>
           <CustomDropdown
             departments={departments}
@@ -312,41 +333,63 @@ function HomePage({ departments, priorities, employees }: Props) {
             onFilterApply={handleFilterApply}
           />
         </div>
-        
+
         {/* Updated EmployeeName component with filter display */}
-        <EmployeeName 
+        <EmployeeName
           selectedFilters={selectedFilters}
           onRemoveFilter={handleRemoveFilter}
         />
-        
+
         <div className={styles.conditionWrapper}>
-          <Condition title={"დასაწყები"} color={"yellow"} count={tasksByStatus[1].length} />
-          <Condition title={"პროგრესში"} color={"orange"} count={tasksByStatus[2].length} />
-          <Condition title={"მზად ტესტირებისთვის"} color={"pink"} count={tasksByStatus[3].length} />
-          <Condition title={"დასრულებული"} color={"blue"} count={tasksByStatus[4].length} />
+          <Condition
+            title={"დასაწყები"}
+            color={"yellow"}
+            count={tasksByStatus[1].length}
+          />
+          <Condition
+            title={"პროგრესში"}
+            color={"orange"}
+            count={tasksByStatus[2].length}
+          />
+          <Condition
+            title={"მზად ტესტირებისთვის"}
+            color={"pink"}
+            count={tasksByStatus[3].length}
+          />
+          <Condition
+            title={"დასრულებული"}
+            color={"blue"}
+            count={tasksByStatus[4].length}
+          />
         </div>
-        
+
         <div className={styles.taskCardsContainer}>
           {loading ? (
-            <div style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ padding: "20px", textAlign: "center" }}>
               <p>Loading tasks...</p>
             </div>
           ) : error ? (
-            <div style={{ padding: '20px', textAlign: 'center', color: 'red' }}>
+            <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
               <p>Error: {error}</p>
             </div>
           ) : (
             <>
-              {[1, 2, 3, 4].map((statusId) => (
-                <div key={statusId} className={styles.taskLine}>
-                  {tasksByStatus[statusId].map((task) => (
-                    <TaskCard key={task.id} task={task} />
-                  ))}
-                  {tasksByStatus[statusId].length === 0 && filteredTasks.length > 0 && (
-                    <p className={styles.noTasks}>No tasks in this status</p>
-                  )}
-                </div>
-              ))}
+              {[1, 2, 3, 4].map((statusId) => {
+                const statusKey: string = `${statusId}`;
+                return (
+                  <div key={statusId} className={styles.taskLine}>
+                    {tasksByStatus[statusKey]?.map((task) => (
+                      <TaskCard key={task.id} task={task} />
+                    ))}
+                    {tasksByStatus[statusKey]?.length === 0 &&
+                      filteredTasks.length > 0 && (
+                        <p className={styles.noTasks}>
+                          No tasks in this status
+                        </p>
+                      )}
+                  </div>
+                );
+              })}
               {filteredTasks.length === 0 && !loading && !error && (
                 <p>No tasks found matching the criteria.</p>
               )}
