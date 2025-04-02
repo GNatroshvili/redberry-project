@@ -1,48 +1,5 @@
-// import React from "react";
-// import styles from "./TaskCard.module.css";
-// import clsx from "clsx";
-// import Difficulty from "../Details/Category/Difficulty/Difficulty";
-// import Category from "../Details/Category/Category";
-
-// type Color = "pink" | "orange" | "blue" | "yellow";
-
-// type Props = {
-//   color: Color;
-// };
-
-// const TaskCard = ({ color }: Props) => {
-//   return (
-//     <div className={styles.taskCardWrapper}>
-//       <div className={styles.detailsWrapper}>
-//         <div className={styles.leftSide}>
-//           <Difficulty size="big" color="red" />
-//           <Category title={"დიზაინი"} color={"orange"} />
-//         </div>
-//         <div className={styles.rightSide}>
-//           <span>22 იანვ, 2022</span>
-//         </div>
-//       </div>
-//       <div className={styles.contentWrapper}>
-//         <p className={styles.title}>Redberry-ს საიტის ლენდინგის დიზაინი</p>
-//         <p className={styles.description}>
-//           შექმენი საიტის მთავარი გვერდი, რომელიც მოიცავს მთავარ სექციებს,
-//           ნავიგაციას.
-//         </p>
-//       </div>
-//       <div className={styles.addressWrapper}>
-//         <img src="/avatar.svg" alt="avatar" />
-//         <div className={styles.commentsWrapper}>
-//             <img src="/comments.svg" alt="comments-icon" />
-//             <span>8</span>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TaskCard;
-
 import React from "react";
+import Link from "next/link";
 import styles from "./TaskCard.module.css";
 import clsx from "clsx";
 import Difficulty from "../Details/Category/Difficulty/Difficulty";
@@ -149,41 +106,43 @@ const TaskCard = ({ task, borderColor }: Props) => {
   };
 
   return (
-    <div className={clsx(styles.taskCardWrapper, getBorderColorStyle())}>
-      <div className={styles.detailsWrapper}>
-        <div className={styles.leftSide}>
-          <Difficulty
-            size="big"
-            color={getPriorityColor(task.priority?.name)}
+    <Link href={`/tasks/${task.id}`}>
+      <div className={clsx(styles.taskCardWrapper, getBorderColorStyle())}>
+        <div className={styles.detailsWrapper}>
+          <div className={styles.leftSide}>
+            <Difficulty
+              size="big"
+              color={getPriorityColor(task.priority?.name)}
+            />
+            <Category
+              title={getCategoryName(task.department?.name) || "N/A"}
+              color={getCategoryColor(task.department?.name)}
+            />
+          </div>
+          <div className={styles.rightSide}>
+            <span className={styles.dueDate}>
+              {formatDateGeorgian(task.due_date)}
+            </span>
+          </div>
+        </div>
+        <div className={styles.contentWrapper}>
+          <p className={styles.title}>{task.name}</p>
+          <p className={styles.description}>{task.description}</p>
+        </div>
+        <div className={styles.addressWrapper}>
+          <img
+            src={task.employee?.avatar || "/avatar.svg"}
+            alt={task.employee?.name}
+            onError={(e) => (e.currentTarget.src = "/avatar.svg")}
+            className={styles.img}
           />
-          <Category
-            title={getCategoryName(task.department?.name) || "N/A"}
-            color={getCategoryColor(task.department?.name)}
-          />
-        </div>
-        <div className={styles.rightSide}>
-          <span className={styles.dueDate}>
-            {formatDateGeorgian(task.due_date)}
-          </span>
+          <div className={styles.commentsWrapper}>
+            <img src="/Comments.svg" alt="comments-icon" />
+            <span>{task.total_comments}</span>
+          </div>
         </div>
       </div>
-      <div className={styles.contentWrapper}>
-        <p className={styles.title}>{task.name}</p>
-        <p className={styles.description}>{task.description}</p>
-      </div>
-      <div className={styles.addressWrapper}>
-        <img
-          src={task.employee?.avatar || "/avatar.svg"}
-          alt={task.employee?.name}
-          onError={(e) => (e.currentTarget.src = "/avatar.svg")}
-          className={styles.img}
-        />
-        <div className={styles.commentsWrapper}>
-          <img src="/Comments.svg" alt="comments-icon" />
-          <span>{task.total_comments}</span>
-        </div>
-      </div>
-    </div>
+    </Link>
   );
 };
 

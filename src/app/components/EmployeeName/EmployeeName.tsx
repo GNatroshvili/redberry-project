@@ -53,10 +53,6 @@
 
 // export default EmployeeName;
 
-
-
-
-
 "use client";
 import styles from "./EmployeeName.module.css";
 import React from "react";
@@ -84,7 +80,7 @@ const EmployeeName = ({ selectedFilters, onRemoveFilter }: Props) => {
           key={`${filter.type}-${filter.id}`}
           className={styles.filterWrapper}
         >
-          <p className={styles.name}>{filter.name}
+          <p className={styles.name}>
             {filter.type === "employee" ? filter.id : filter.name}
           </p>
           <img
