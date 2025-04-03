@@ -2,7 +2,7 @@ import React from 'react'
 import styles from "./PageTitle.module.css"
 
 type Props = {
-    text: string,
+    text: any,
 }
 
 const PageTitle = ({ text }: Props) => {

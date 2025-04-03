@@ -35,6 +35,7 @@ export default function Home() {
       try {
         const { data: prioritiesData } = await api.get("/api/priorities");
         const { data: departmentsData } = await api.get("/api/departments");
+        console.log("Departments Data:", departmentsData); // Add this line
         const { data: statusesData } = await api.get("/api/statuses");
 
         setPriorities(prioritiesData);
@@ -54,6 +55,11 @@ export default function Home() {
   const [descriptionInputValue, setDescriptionInputValue] = useState("");
   const [selectedDepartment, setSelectedDepartment] =
     useState<DepartmentType | null>(null);
+
+  useEffect(() => {
+    console.log(selectedDepartment);
+  }, [selectedDepartment]);
+
   const [selectedPriorityId, setSelectedPriorityId] = useState<number | null>(
     null
   );
@@ -74,6 +80,12 @@ export default function Home() {
   };
 
   const handleDepartmentSelection = (department: DepartmentType) => {
+    console.log(
+      "Selected Department ID:",
+      department.id,
+      "Name:",
+      department.name
+    );
     setSelectedDepartment(department);
     console.log("Selected Department in Parent:", department.name);
   };
@@ -99,7 +111,7 @@ export default function Home() {
   };
 
   const formatDateForDisplay = (date: Date | null): string => {
-    if (!date) return ""; 
+    if (!date) return "";
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
@@ -111,7 +123,9 @@ export default function Home() {
     setSuccessMessage(null);
     setErrorMessage(null);
 
-    const dueDate = selectedDeadline ? formatDateForDisplay(selectedDeadline) : null;
+    const dueDate = selectedDeadline
+      ? formatDateForDisplay(selectedDeadline)
+      : null;
 
     const taskData = {
       name: titleInputValue,
@@ -120,10 +134,12 @@ export default function Home() {
       status_id: selectedStatusId,
       employee_id: selectedEmployeeId,
       priority_id: selectedPriorityId,
-      department_id: selectedDepartment?.id, 
+      department_id: selectedDepartment?.id,
     };
 
     try {
+      console.log("Task Data Being Sent:", taskData);
+      console.log(JSON.stringify(taskData))
       const res = await fetch(
         "https://momentum.redberryinternship.ge/api/tasks",
         {
@@ -151,7 +167,11 @@ export default function Home() {
         setSelectedDeadline(null);
       } else {
         console.error("Error creating task:", result);
-        setErrorMessage(`Failed to create task. ${result?.message || "Please check the form data."}`);
+        setErrorMessage(
+          `Failed to create task. ${
+            result?.message || "Please check the form data."
+          }`
+        );
       }
     } catch (err) {
       console.error("Error sending form data:", err);
@@ -202,18 +222,13 @@ export default function Home() {
         </div>
         <div className={styles.fourthLine}>
           <div>
-            <button
-              className={styles.button}
-              onClick={handleCreateTask}
-            >
+            <button className={styles.button} onClick={handleCreateTask}>
               შექმნა
             </button>
             {successMessage && (
               <p style={{ color: "green" }}>{successMessage}</p>
             )}
-            {errorMessage && (
-              <p style={{ color: "red" }}>{errorMessage}</p>
-            )}
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             <p>Title Value in Parent: {titleInputValue}</p>
             <p>Description Value in Parent: {descriptionInputValue}</p>
             {selectedDepartment && (
