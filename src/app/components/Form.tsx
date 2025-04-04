@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import EnterNameField from "../components/InputFields/EnterNameField";
+import UserAvatarUpload from "./UserAvatarUpload/UserAvatarUpload";
+import InputFile from "./InputFile/InputFile";
+import styles from "./Form.module.css";
+import CancelButton from "./CancelButton/CancelButton";
 
 type Props = {
   departments: any[];
@@ -9,8 +14,8 @@ type Props = {
 function Form({ departments }: Props) {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
-  const [avatar, setAvatar] = useState<File>({} as File);
-  const [position, setPosition] = useState(departments[0].id);
+  const [position, setPosition] = useState(departments?.[0]?.id || "");
+  const [avatar, setAvatar] = useState<File | null>(null);
 
   return (
     <form
@@ -54,43 +59,24 @@ function Form({ departments }: Props) {
         gap: "1rem",
       }}
     >
-      <label>
-        Name:
-        <input
+      <div className={styles.nameAndSurnameWrapper}>
+        <EnterNameField
+          title="სახელი"
           value={name}
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
+          onChange={(e) => setName(e.target.value)}
           type="text"
           name="name"
         />
-      </label>
 
-      <label>
-        Surname:
-        <input
+        <EnterNameField
+          title="გვარი"
           value={surname}
-          onChange={(e) => {
-            setSurname(e.target.value);
-          }}
+          onChange={(e) => setSurname(e.target.value)}
           type="text"
           name="surname"
         />
-      </label>
-
-      <label>
-        Avatar:
-        <input
-          onChange={(e) => {
-            const selectedFile = e.target.files?.[0];
-            if (selectedFile) {
-              setAvatar(selectedFile);
-            }
-          }}
-          type="file"
-          name="avatar"
-        />
-      </label>
+      </div>
+      <UserAvatarUpload avatar={avatar} setAvatar={setAvatar} />
 
       <select
         value={position}
@@ -107,7 +93,22 @@ function Form({ departments }: Props) {
         ))}
       </select>
 
-      <input type="submit" value="Submit" />
+      {/* <input className={styles.submitButton} type="submit" value="Submit" /> */}
+      <div className={styles.buttonsWrapper}>
+        <div className={styles.buttons}>
+          <CancelButton
+            text={"გაუქმება"}
+            onClick={() => {
+              setName("");
+              setSurname("");
+              setAvatar(null);
+              setPosition(departments?.[0]?.id || "");
+            }}
+          />
+
+          <InputFile text={"დაამატე თანამშრომელი"} />
+        </div>
+      </div>
     </form>
   );
 }

@@ -1,0 +1,11 @@
+.nameAndSurnameWrapper {
+  margin-top: 45px;
+  display: flex;
+  gap: 45px;
+}
+
+.buttons {
+  margin-top: 65px;
+  display: flex;
+  gap: 22px;
+}

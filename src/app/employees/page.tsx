@@ -1,5 +1,5 @@
 import Form from "../components/Form";
-import Image from "next/image";
+// import Image from "next/image";
 
 export default async function Page() {
   const data = await fetch(
@@ -18,8 +18,8 @@ export default async function Page() {
     <>
       {data?.map((employee: any, index: any) => (
         <div key={index.toString()}>
-          {employee.name} {employee.surname}
-          <Image src={employee.avatar} width={100} height={100} alt="test" />
+          {/* {employee.name} {employee.surname}
+          <Image src={employee.avatar} width={100} height={100} alt="test" /> */}
         </div>
       ))}
       <Form departments={departments} />

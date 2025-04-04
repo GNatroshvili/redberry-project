@@ -1,18 +1,19 @@
-import React from 'react'
-import styles from "./Button.module.css"
+// components/AddToEmployeeButton.tsx
+"use client";
+import React from "react";
+import styles from "./Button.module.css";
 
 type Props = {
-  title : any
-}
+  title: string;
+  onClick: () => void;
+};
 
-const Button = ({title} : Props) => {
+const AddToEmployeeButton = ({ title, onClick }: Props) => {
   return (
-    <div>
-        <button className={styles.button}>
-            {title}
-        </button>
-    </div>
-  )
-}
+    <button className={styles.button} onClick={onClick}>
+      {title}
+    </button>
+  );
+};
 
-export default Button
+export default AddToEmployeeButton;
