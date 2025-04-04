@@ -116,8 +116,10 @@
 }
 
 .responseWrapper {
+  margin-top: 20px;
+  border-radius: 10px;
   background-color: #fff;
-  padding: 10px;
+  padding: 18px 20px 15px;
 }
 
 .response {
@@ -141,7 +143,6 @@
   border-radius: 50%;
 }
 
-
 .errorContainer {
   margin-top: 0.5rem;
   color: #dc3545;
@@ -160,3 +161,7 @@
   border-radius: 4px;
 }
 
+.subComment {
+  margin-left: 50px;
+  margin-top: 20px;
+}
