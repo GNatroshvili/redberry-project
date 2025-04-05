@@ -55,45 +55,45 @@ function Form({ departments }: Props) {
       style={{
         display: "flex",
         flexDirection: "column",
-        maxWidth: "200px",
         gap: "1rem",
       }}
     >
-      <div className={styles.nameAndSurnameWrapper}>
-        <EnterNameField
-          title="სახელი"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          name="name"
-        />
+      <div className={styles.container}>
+        <div className={styles.nameAndSurnameWrapper}>
+          <EnterNameField
+            title="სახელი"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            type="text"
+            name="name"
+          />
 
-        <EnterNameField
-          title="გვარი"
-          value={surname}
-          onChange={(e) => setSurname(e.target.value)}
-          type="text"
-          name="surname"
-        />
+          <EnterNameField
+            title="გვარი"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
+            type="text"
+            name="surname"
+          />
+        </div>
+        <UserAvatarUpload avatar={avatar} setAvatar={setAvatar} />
+
+        <select
+          value={position}
+          onChange={(e) => {
+            setPosition(e.target.value);
+          }}
+          name="position"
+          id="position"
+          className={styles.option}
+        >
+          {departments.map((department, index) => (
+            <option key={index.toString()} value={department.id}>
+              {department.name}
+            </option>
+          ))}
+        </select>
       </div>
-      <UserAvatarUpload avatar={avatar} setAvatar={setAvatar} />
-
-      <select
-        value={position}
-        onChange={(e) => {
-          setPosition(e.target.value);
-        }}
-        name="position"
-        id="position"
-      >
-        {departments.map((department, index) => (
-          <option key={index.toString()} value={department.id}>
-            {department.name}
-          </option>
-        ))}
-      </select>
-
-      {/* <input className={styles.submitButton} type="submit" value="Submit" /> */}
       <div className={styles.buttonsWrapper}>
         <div className={styles.buttons}>
           <CancelButton
