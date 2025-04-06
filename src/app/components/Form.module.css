@@ -11,7 +11,7 @@
 }
 
 .buttons {
-  margin-top: 65px;
+  margin-top: 110px;
   display: flex;
   gap: 22px;
 }
@@ -27,4 +27,8 @@
 .buttonsWrapper {
   display: flex;
   justify-content: flex-end;
+}
+
+.departmentsWrapper {
+  width: 384px;
 }

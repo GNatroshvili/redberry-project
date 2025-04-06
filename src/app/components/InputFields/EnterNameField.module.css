@@ -63,3 +63,21 @@
   align-items: center;
   gap: 2px;
 }
+
+.inputError {
+  border-color: #dc3545; 
+}
+
+.inputValid {
+  border-color: #28a745; 
+}
+
+.errorText {
+  color: #dc3545 !important;
+}
+
+.validText {
+  color: #28a745 !important;
+}
+
+

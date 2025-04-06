@@ -1,7 +1,7 @@
 // components/EmployeeModal.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import Form from "../Form";
+import EmployeeForm from "../Form";
 import styles from "./EmployeeModal.module.css";
 import Image from "next/image";
 
@@ -46,14 +46,14 @@ const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
           />
         </div>
         <h2 className={styles.modalTitle}>თანამშრომლის დამატება</h2>
-        {employees.map((employee: any, idx: number) => (
+        {/* {employees.map((employee: any, idx: number) => (
           <div key={idx}>
             <p>
               {employee.first_name} {employee.last_name}
             </p>
           </div>
-        ))}
-        <Form departments={departments} />
+        ))} */}
+          <EmployeeForm departments={departments} />
       </div>
     </div>
   );
