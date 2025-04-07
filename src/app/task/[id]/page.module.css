@@ -67,6 +67,7 @@
 .statusesWrapper {
   display: flex;
   gap: 70px;
+  margin-top: 35px;
 }
 
 .employeesWrapper {
@@ -85,5 +86,11 @@
   font-size: 14px;
   line-height: 150%;
   letter-spacing: 0%;
-  color: #0D0F10;
+  color: #0d0f10;
+}
+
+.statusField {
+  position: relative;
+  top: -34px;
+  left: -89px;
 }

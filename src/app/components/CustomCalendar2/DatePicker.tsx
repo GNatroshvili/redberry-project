@@ -384,7 +384,6 @@ const DatePicker: React.FC<Props> = ({ onDateChange }) => {
               alt="Calendar"
             />
             <div className={styles.inputContent}>
-              <div className={styles.caret} />
               <div className={styles.placeholder}>
                 {formatDate(selectedDate)}
               </div>

@@ -255,6 +255,7 @@ function EmployeeForm({ departments }: Props) {
 
             <div className={styles.departmentsWrapper}>
               <DepartmentsList
+              size={"medium"}
                 departments={departments}
                 onDepartmentSelect={(department) =>
                   setFieldValue("position", department.id)

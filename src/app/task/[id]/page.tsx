@@ -10,6 +10,7 @@ import "@fontsource/firago/600.css";
 import "@fontsource/firago/600-italic.css";
 import "@fontsource/firago/700.css";
 import "@fontsource/firago/700-italic.css";
+
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
@@ -118,11 +119,7 @@ export default function TaskDetailsPage() {
             ? { ...prevTask, status: statuses.find((s) => s.id === statusId) }
             : null
         );
-        console.log(
-          "Task status updated successfully on the server (using PUT)."
-        );
-        // ENSURE THIS LINE REMAINS COMMENTED OUT
-        // router.refresh();
+        console.log("Task status updated successfully on the server.");
       } else {
         console.error(
           "Failed to update task status (PUT):",
@@ -152,18 +149,7 @@ export default function TaskDetailsPage() {
     }
   };
 
-  const getCategoryName = (
-    CategoryName: string | undefined
-  ):
-    | "დიზაინი"
-    | "მარკეტინგი"
-    | "ლოჯისტიკა"
-    | "ინფ. ტექ"
-    | "ადმინისტრაცია"
-    | "HR"
-    | "ფინანსები"
-    | "მედია"
-    | undefined => {
+  const getCategoryName = (CategoryName: string | undefined) => {
     if (CategoryName === "დიზაინერების დეპარტამენტი") return "დიზაინი";
     if (CategoryName === "გაყიდვები და მარკეტინგის დეპარტამენტი")
       return "მარკეტინგი";
@@ -230,11 +216,14 @@ export default function TaskDetailsPage() {
           <div className={styles.TaskComponentsWrapper}>
             <div className={styles.statusesWrapper}>
               <TaskComponents title="სტატუსი" />
-              <Status
-                statuses={statuses}
-                onStatusSelect={handleStatusSelection}
-                initialStatus={task?.status}
-              />
+              <div className={styles.statusField}>
+                <Status
+                  statuses={statuses}
+                  onStatusSelect={handleStatusSelection}
+                  initialStatus={task?.status ?? null}
+                  departmentName={task?.department?.name}
+                />
+              </div>
             </div>
             <div className={styles.employeesWrapper}>
               <TaskComponents title="თანამშრომელი" />

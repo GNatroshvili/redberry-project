@@ -77,3 +77,15 @@
 .openedTitle {
   color: #8338ec;
 }
+
+.small {
+  width: 250px;
+}
+
+.medium {
+  width: 384px;
+}
+
+.large {
+  width: 550px;
+}

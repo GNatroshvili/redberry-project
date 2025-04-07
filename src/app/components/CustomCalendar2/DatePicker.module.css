@@ -24,8 +24,9 @@
 }
 .inputField {
   width: 272px;
+  height: 48px;
   margin-top: 5px;
-  border: 1px solid var(--purple-accent-color, #8338ec);
+  border: 1px solid var(--purple-accent-color, #ccc);
   color: #adb5bd;
   white-space: nowrap;
   letter-spacing: -0.18px;

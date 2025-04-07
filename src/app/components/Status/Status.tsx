@@ -7,31 +7,29 @@ type Props = {
   statuses: StatusType[];
   onStatusSelect?: (statusId: number) => void;
   initialStatus?: StatusType | null;
+  title?: string;
+  departmentName?: string;
 };
 
-function CustomDropdown({ statuses, onStatusSelect, initialStatus }: Props) {
+function CustomDropdown({
+  statuses,
+  onStatusSelect,
+  initialStatus,
+  title,
+  departmentName,
+}: Props) {
   const [openedId, setOpenedId] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState<StatusType | null>(null);
 
-  // Set the initial selected status based on the initialStatus prop
   useEffect(() => {
-    if (initialStatus && statuses.length > 0 && !selectedStatus) {
-      const matched = statuses.find((s) => s.id === initialStatus.id);
-      if (matched) {
-        setSelectedStatus(matched);
-        console.log("Initial selected status:", matched);
+    if (initialStatus && statuses.length > 0) {
+      const match = statuses.find((s) => s.id === initialStatus.id);
+      if (match) {
+        setSelectedStatus(match);
+        console.log("Set initialStatus from props:", match);
       }
-    } else if (
-      !initialStatus &&
-      selectedStatus === null &&
-      statuses.length > 0
-    ) {
-      const fallback =
-        statuses.find((s) => s.name === "დასაწყები") || statuses[0];
-      setSelectedStatus(fallback);
-      console.log("Fallback initial status:", fallback);
     }
-  }, [initialStatus, statuses, selectedStatus]);
+  }, [initialStatus?.id, statuses]);
 
   const handleClick = (index: number) => {
     setOpenedId(index === openedId ? -1 : index);
@@ -40,10 +38,8 @@ function CustomDropdown({ statuses, onStatusSelect, initialStatus }: Props) {
   const handleStatusClick = (status: StatusType) => {
     setSelectedStatus(status);
     setOpenedId(-1);
-    onStatusSelect?.(status.id); // Call onStatusSelect ONLY on user click
+    onStatusSelect?.(status.id);
   };
-
-  const dropdowns = [{ checkboxes: statuses }];
 
   return (
     <div className={styles.statusesWrapper}>
@@ -52,7 +48,7 @@ function CustomDropdown({ statuses, onStatusSelect, initialStatus }: Props) {
           openedId !== -1 ? styles.openedTitle : ""
         }`}
       >
-        სტატუსი<span>*</span>
+        {title}
       </p>
       <div
         className={`${styles.container} ${
@@ -60,32 +56,29 @@ function CustomDropdown({ statuses, onStatusSelect, initialStatus }: Props) {
         }`}
       >
         <div className={styles.buttonsContainer}>
-          {dropdowns.map((dropdown, index) => (
-            <button
-              key={index.toString()}
-              onClick={() => handleClick(index)}
-              className={styles.dropdownButton}
-            >
-              <span className={styles.selectedText}>
-                {selectedStatus ? selectedStatus.name : "დასაწყები"}
-              </span>
-              <div style={{ rotate: openedId === index ? "180deg" : "0deg" }}>
-                <DropdownIcon
-                  fill={openedId === index ? "rgba(131, 56, 236, 1)" : "#000"}
-                />
-              </div>
-            </button>
-          ))}
+          <button
+            onClick={() => handleClick(0)}
+            className={styles.dropdownButton}
+          >
+            <span className={styles.selectedText}>
+              {selectedStatus ? selectedStatus.name : "დასაწყები"}
+            </span>
+            <div style={{ rotate: openedId === 0 ? "180deg" : "0deg" }}>
+              <DropdownIcon
+                fill={openedId === 0 ? "rgba(131, 56, 236, 1)" : "#000"}
+              />
+            </div>
+          </button>
         </div>
         {openedId !== -1 && (
           <div className={styles.dropdownContainer}>
-            {dropdowns[openedId]?.checkboxes?.map((checkbox, index) => (
-              <div key={index.toString()} className={styles.statusItem}>
+            {statuses.map((status, index) => (
+              <div key={index} className={styles.statusItem}>
                 <button
                   className={styles.buttonContent}
-                  onClick={() => handleStatusClick(checkbox)}
+                  onClick={() => handleStatusClick(status)}
                 >
-                  <p>{checkbox.name}</p>
+                  <p>{status.name}</p>
                 </button>
               </div>
             ))}

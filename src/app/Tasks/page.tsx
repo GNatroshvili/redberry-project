@@ -214,6 +214,7 @@ export default function Home() {
             <Status
               statuses={statuses}
               onStatusSelect={handleStatusSelection}
+              title={"სტატუსი*"}
             />
           </div>
           <div className={styles.rightSide}>
@@ -223,28 +224,10 @@ export default function Home() {
         <div className={styles.fourthLine}>
           <div>
             <button className={styles.button} onClick={handleCreateTask}>
-              შექმნა
+              დავალების შექმნა
             </button>
             {successMessage && (
               <p style={{ color: "green" }}>{successMessage}</p>
-            )}
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <p>Title Value in Parent: {titleInputValue}</p>
-            <p>Description Value in Parent: {descriptionInputValue}</p>
-            {selectedDepartment && (
-              <p>Selected Department Name: {selectedDepartment.name}</p>
-            )}
-            {selectedPriorityId !== null && (
-              <p>Selected Priority ID: {selectedPriorityId}</p>
-            )}
-            {selectedStatusId !== null && (
-              <p>Selected Status ID: {selectedStatusId}</p>
-            )}
-            {selectedEmployeeId !== null && (
-              <p>Selected Employee ID: {selectedEmployeeId}</p>
-            )}
-            {selectedDeadline && (
-              <p>Selected Deadline: {formatDateForDisplay(selectedDeadline)}</p>
             )}
           </div>
         </div>
