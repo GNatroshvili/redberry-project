@@ -56,11 +56,12 @@ import { useRef } from "react";
 import styles from "./UserAvatarUpload.module.css";
 
 type Props = {
-  avatar: string | null;
+  avatar: File | null;
   setAvatar: (value: File | null) => void;
+  error: string | null;
 };
 
-export default function UserAvatarUpload({ avatar, setAvatar }: Props) {
+export default function UserAvatarUpload({ avatar, setAvatar, error }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +78,7 @@ export default function UserAvatarUpload({ avatar, setAvatar }: Props) {
   const handleRemoveAvatar = () => {
     setAvatar(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // clear file input value too
+      fileInputRef.current.value = "";
     }
   };
 
@@ -117,6 +118,7 @@ export default function UserAvatarUpload({ avatar, setAvatar }: Props) {
           style={{ display: "none" }}
         />
       </div>
+      {error && <div className={styles.errorMessage}>{error}</div>}
     </div>
   );
 }

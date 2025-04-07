@@ -132,36 +132,68 @@ type Props = {
   departments: DepartmentType[];
 };
 
+// Configure validation constants
+const MAX_IMAGE_SIZE = 600 * 1024; // 600KB in bytes
+const NAME_REGEX = /^[\p{L}\s']+$/u;
+const GEORGIAN_LATIN_REGEX = /^[a-zA-Z\u10A0-\u10FF\s']+$/;
+
 const validationSchema = Yup.object({
   name: Yup.string()
     .min(2, "მინიმუმ 2 სიმბოლო")
     .max(255, "მაქსიმუმ 255 სიმბოლო")
+    .matches(GEORGIAN_LATIN_REGEX, "მხოლოდ ქართული და ლათინური სიმბოლოები")
     .required("სახელი სავალდებულოა"),
   surname: Yup.string()
     .min(2, "მინიმუმ 2 სიმბოლო")
     .max(255, "მაქსიმუმ 255 სიმბოლო")
+    .matches(GEORGIAN_LATIN_REGEX, "მხოლოდ ქართული და ლათინური სიმბოლოები")
     .required("გვარი სავალდებულოა"),
   position: Yup.number().required("პოზიცია სავალდებულოა"),
 });
 
 function EmployeeForm({ departments }: Props) {
   const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const defaultDepartmentId = departments?.[0]?.id || "";
+
+  const handleAvatarUpload = (file: File | null) => {
+    setAvatarError(null);
+    
+    if (file) {
+      if (file.size > MAX_IMAGE_SIZE) {
+        setAvatarError("გამოსახულების ზომა არ უნდა აღემატებოდეს 600KB-ს");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        setAvatarError("გთხოვთ ატვირთოთ სურათი");
+        return;
+      }
+    }
+    
+    setAvatar(file);
+  };
 
   return (
     <Formik
       initialValues={{
         name: "",
         surname: "",
-        position: departments?.[0]?.id || "",
+        position: defaultDepartmentId,
       }}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
+        if (avatarError) return;
+
         const formData = new FormData();
         formData.append("name", values.name);
         formData.append("surname", values.surname);
         formData.append("department_id", values.position.toString());
 
         if (avatar) {
+          if (avatar.size > MAX_IMAGE_SIZE) {
+            setAvatarError("გამოსახულების ზომა არ უნდა აღემატებოდეს 600KB-ს");
+            return;
+          }
           formData.append("avatar", avatar);
         }
 
@@ -182,6 +214,7 @@ function EmployeeForm({ departments }: Props) {
           console.log("Response:", result);
           resetForm();
           setAvatar(null);
+          setAvatarError(null);
         } catch (err) {
           console.error("Error sending form data:", err);
         }
@@ -214,7 +247,11 @@ function EmployeeForm({ departments }: Props) {
               />
             </div>
 
-            <UserAvatarUpload avatar={avatar} setAvatar={setAvatar} />
+            <UserAvatarUpload 
+              avatar={avatar} 
+              setAvatar={handleAvatarUpload}
+              error={avatarError}
+            />
 
             <div className={styles.departmentsWrapper}>
               <DepartmentsList
@@ -222,6 +259,7 @@ function EmployeeForm({ departments }: Props) {
                 onDepartmentSelect={(department) =>
                   setFieldValue("position", department.id)
                 }
+                value={values.position}
               />
             </div>
           </div>
@@ -233,6 +271,7 @@ function EmployeeForm({ departments }: Props) {
                 onClick={() => {
                   resetForm();
                   setAvatar(null);
+                  setAvatarError(null);
                 }}
               />
               <InputFile text={"დაამატე თანამშრომელი"} />

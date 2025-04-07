@@ -46,13 +46,13 @@ const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
           />
         </div>
         <h2 className={styles.modalTitle}>თანამშრომლის დამატება</h2>
-        {/* {employees.map((employee: any, idx: number) => (
+         {employees.map((employee: any, idx: number) => (
           <div key={idx}>
             <p>
               {employee.first_name} {employee.last_name}
             </p>
           </div>
-        ))} */}
+        ))} 
           <EmployeeForm departments={departments} />
       </div>
     </div>

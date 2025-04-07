@@ -95,27 +95,37 @@ import { DepartmentType } from "../../types";
 type Props = {
   departments: DepartmentType[];
   onDepartmentSelect?: (department: DepartmentType) => void;
+  value?: number;
 };
 
-function CustomDropdown({ departments, onDepartmentSelect }: Props) {
+function CustomDropdown({ departments, onDepartmentSelect, value }: Props) {
   const [openedId, setOpenedId] = useState(-1);
   const [selectedDepartment, setSelectedDepartment] = useState<DepartmentType | null>(
     null
   );
 
   useEffect(() => {
-    // Set the default department only on the initial render or when departments change
     if (departments && departments.length > 0) {
-      const defaultDepartment =
-        departments.find((p) => p.name === "საშუალო") || departments[0];
-      if (defaultDepartment && selectedDepartment === null) {
+      let defaultDepartment = null;
+      
+      // If a value is provided, use that
+      if (value) {
+        defaultDepartment = departments.find(d => d.id === value);
+      }
+      
+      // Otherwise use the default logic
+      if (!defaultDepartment) {
+        defaultDepartment = departments.find((p) => p.name === "საშუალო") || departments[0];
+      }
+
+      if (defaultDepartment && selectedDepartment?.id !== defaultDepartment.id) {
         setSelectedDepartment(defaultDepartment);
         if (onDepartmentSelect) {
           onDepartmentSelect(defaultDepartment);
         }
       }
     }
-  }, [departments, onDepartmentSelect, selectedDepartment]); // Include selectedDepartment in the dependency array
+  }, [departments, onDepartmentSelect, selectedDepartment, value]);
 
   const handleClick = (index: number) => {
     setOpenedId(index === openedId ? -1 : index);
@@ -124,7 +134,6 @@ function CustomDropdown({ departments, onDepartmentSelect }: Props) {
   const handleDepartmentClick = (department: DepartmentType) => {
     setSelectedDepartment(department);
     setOpenedId(-1);
-    console.log(department.name);
     if (onDepartmentSelect) {
       onDepartmentSelect(department);
     }
@@ -134,31 +143,20 @@ function CustomDropdown({ departments, onDepartmentSelect }: Props) {
 
   return (
     <div className={styles.departmentsWrapper}>
-      <p
-        className={`${styles.title} ${
-          openedId !== -1 ? styles.openedTitle : ""
-        }`}
-      >
+      <p className={`${styles.title} ${openedId !== -1 ? styles.openedTitle : ""}`}>
         დეპარტამენტი<span>*</span>
       </p>
-      <div
-        className={`${styles.container} ${
-          openedId !== -1 ? styles.openedContainer : ""
-        }`}
-      >
+      <div className={`${styles.container} ${openedId !== -1 ? styles.openedContainer : ""}`}>
         <div className={styles.buttonsContainer}>
           {dropdowns.map((dropdown, index) => (
             <button
               key={index.toString()}
               onClick={() => handleClick(index)}
               className={styles.dropdownButton}
+              type="button"
             >
               <div className={styles.buttonContent}>
-                {selectedDepartment && (
-                  <>
-                    <span>{selectedDepartment.name}</span>
-                  </>
-                )}
+                {selectedDepartment && <span>{selectedDepartment.name}</span>}
               </div>
               <div style={{ rotate: openedId === index ? "180deg" : "0deg" }}>
                 <DropdownIcon
@@ -175,6 +173,7 @@ function CustomDropdown({ departments, onDepartmentSelect }: Props) {
                 <button
                   className={styles.buttonContent}
                   onClick={() => handleDepartmentClick(checkbox)}
+                  type="button"
                 >
                   <p>{checkbox.name}</p>
                 </button>

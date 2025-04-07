@@ -82,3 +82,10 @@
   justify-content: center;
   cursor: pointer;
 }
+
+.errorMessage {
+  color: #ff0000;
+  font-size: 14px;
+  margin-top: 8px;
+  font-family: 'Helvetica Neue', sans-serif;
+}
