@@ -11,7 +11,7 @@ import "@fontsource/firago/600-italic.css";
 import "@fontsource/firago/700.css";
 import "@fontsource/firago/700-italic.css";
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { TaskType, StatusType } from "../../types";
 import Header from "../../components/Header/Header";
@@ -29,6 +29,7 @@ type Color = "pink" | "orange" | "blue" | "yellow";
 
 export default function TaskDetailsPage() {
   const { id } = useParams();
+  const router = useRouter();
   const [task, setTask] = useState<TaskType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +37,7 @@ export default function TaskDetailsPage() {
   const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const taskId = typeof id === "string" ? id : "";
+  const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385";
 
   useEffect(() => {
     async function fetchTask() {
@@ -48,23 +50,20 @@ export default function TaskDetailsPage() {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
-              Authorization: `Bearer 9e882e2f-3297-435e-b537-67817136c385`,
+              Authorization: authToken,
             },
           }
         );
         setTask(response.data);
         console.log("Fetched Task Status:", response.data.status);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error fetching task:", err);
         setError("Failed to fetch task details.");
       } finally {
         setLoading(false);
       }
     }
-
-    if (id) {
-      fetchTask();
-    }
+    if (id) fetchTask();
   }, [id]);
 
   useEffect(() => {
@@ -76,30 +75,68 @@ export default function TaskDetailsPage() {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
-              Authorization: `Bearer 9e882e2f-3297-435e-b537-67817136c385`,
+              Authorization: authToken,
             },
           }
         );
         setStatuses(statusesData);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching statuses:", error);
         setErrorMessage("Error fetching initial data.");
       }
     }
-
     fetchData();
   }, []);
 
-  // ✅ Log task.status when task state updates
-  useEffect(() => {
-    if (task) {
-      console.log("Task Status (from task state):", task.status);
+  const handleStatusSelection = async (statusId: number) => {
+    setSelectedStatusId(statusId);
+    console.log("Selected Status ID in Parent:", statusId);
+    try {
+      const response = await axios.put(
+        `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
+        {
+          status_id: statusId,
+          name: task?.name,
+          description: task?.description,
+          due_date: task?.due_date,
+          priority_id: task?.priority?.id,
+          employee_id: task?.employee?.id,
+          department_id: task?.department?.id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: authToken,
+          },
+        }
+      );
+      console.log("Update Task Response (PUT):", response);
+      if (response.status === 200) {
+        setTask((prevTask) =>
+          prevTask
+            ? { ...prevTask, status: statuses.find((s) => s.id === statusId) }
+            : null
+        );
+        console.log(
+          "Task status updated successfully on the server (using PUT)."
+        );
+        // ENSURE THIS LINE REMAINS COMMENTED OUT
+        // router.refresh();
+      } else {
+        console.error(
+          "Failed to update task status (PUT):",
+          response.status,
+          response.data
+        );
+        setErrorMessage(
+          `Failed to update task status (PUT): ${response.status}`
+        );
+      }
+    } catch (error: any) {
+      console.error("Error updating task status (PUT):", error);
+      setErrorMessage(`Failed to update task status (PUT): ${error.message}`);
     }
-  }, [task]);
-
-  const handleStatusSelection = (id: number) => {
-    setSelectedStatusId(id);
-    console.log("Selected Status ID in Parent:", id);
   };
 
   const getStatusColor = (statusName: string | undefined) => {
