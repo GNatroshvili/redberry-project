@@ -5,22 +5,48 @@
 
 // type Props = {
 //   statuses: StatusType[];
+//   onStatusSelect?: (statusId: number) => void;
+//   initialStatus?: StatusType | null;
 // };
 
-// function CustomDropdown({ statuses }: Props) {
+// function CustomDropdown({ statuses, onStatusSelect, initialStatus }: Props) {
 //   const [openedId, setOpenedId] = useState(-1);
 //   const [selectedStatus, setSelectedStatus] = useState<StatusType | null>(null);
 
 //   useEffect(() => {
+//     if (selectedStatus === null) {
+//       const initial = initialStatus
+//         ? statuses.find((s) => s.id === initialStatus.id)
+//         : statuses.find((s) => s.name === "დასაწყები") || statuses[0];
+
+//       if (initial) {
+//         setSelectedStatus(initial);
+//         onStatusSelect?.(initial.id);
+//       }
+//     }
+//   }, [statuses, initialStatus, selectedStatus, onStatusSelect]);
+
+//   useEffect(() => {
 //     const defaultStatus =
 //       statuses?.find((p) => p.name === "დასაწყები") || statuses?.[0];
-//     if (defaultStatus) {
+//     if (defaultStatus && selectedStatus === null) {
 //       setSelectedStatus(defaultStatus);
+//       if (onStatusSelect) {
+//         onStatusSelect(defaultStatus.id);
+//       }
 //     }
-//   }, [statuses]);
+//   }, [statuses, onStatusSelect, selectedStatus]);
 
 //   const handleClick = (index: number) => {
 //     setOpenedId(index === openedId ? -1 : index);
+//   };
+
+//   const handleStatusClick = (status: StatusType) => {
+//     setSelectedStatus(status);
+//     setOpenedId(-1);
+//     if (onStatusSelect) {
+//       onStatusSelect(status.id);
+//     }
 //   };
 
 //   const dropdowns = [{ checkboxes: statuses }];
@@ -63,12 +89,7 @@
 //               <div key={index.toString()} className={styles.statusItem}>
 //                 <button
 //                   className={styles.buttonContent}
-//                   onClick={() => {
-//                     if (checkbox) {
-//                       setSelectedStatus(checkbox);
-//                       setOpenedId(-1);
-//                     }
-//                   }}
+//                   onClick={() => handleStatusClick(checkbox)}
 //                 >
 //                   <p>{checkbox.name}</p>
 //                 </button>
@@ -90,23 +111,35 @@ import styles from "./Status.module.css";
 
 type Props = {
   statuses: StatusType[];
-  onStatusSelect?: (statusId: number) => void; // Callback prop for ID
+  onStatusSelect?: (statusId: number) => void;
+  initialStatus?: StatusType | null;
 };
 
-function CustomDropdown({ statuses, onStatusSelect }: Props) {
+function CustomDropdown({ statuses, onStatusSelect, initialStatus }: Props) {
   const [openedId, setOpenedId] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState<StatusType | null>(null);
 
+  // Reactively set the status when initialStatus or statuses change
   useEffect(() => {
-    const defaultStatus =
-      statuses?.find((p) => p.name === "დასაწყები") || statuses?.[0];
-    if (defaultStatus && selectedStatus === null) {
-      setSelectedStatus(defaultStatus);
-      if (onStatusSelect) {
-        onStatusSelect(defaultStatus.id); // Call on mount with default ID
+    if (initialStatus && statuses.length > 0) {
+      const matched = statuses.find((s) => s.id === initialStatus.id);
+      if (matched && matched.id !== selectedStatus?.id) {
+        setSelectedStatus(matched);
+        console.log("Default selected status:", matched); // ✅ console log
+        onStatusSelect?.(matched.id);
       }
+    } else if (
+      !initialStatus &&
+      selectedStatus === null &&
+      statuses.length > 0
+    ) {
+      const fallback =
+        statuses.find((s) => s.name === "დასაწყები") || statuses[0];
+      setSelectedStatus(fallback);
+      console.log("Fallback default status:", fallback); // optional log
+      onStatusSelect?.(fallback.id);
     }
-  }, [statuses, onStatusSelect, selectedStatus]);
+  }, [initialStatus, statuses]);
 
   const handleClick = (index: number) => {
     setOpenedId(index === openedId ? -1 : index);
@@ -115,9 +148,7 @@ function CustomDropdown({ statuses, onStatusSelect }: Props) {
   const handleStatusClick = (status: StatusType) => {
     setSelectedStatus(status);
     setOpenedId(-1);
-    if (onStatusSelect) {
-      onStatusSelect(status.id); // Call the callback with the selected status ID
-    }
+    onStatusSelect?.(status.id);
   };
 
   const dropdowns = [{ checkboxes: statuses }];
@@ -160,7 +191,7 @@ function CustomDropdown({ statuses, onStatusSelect }: Props) {
               <div key={index.toString()} className={styles.statusItem}>
                 <button
                   className={styles.buttonContent}
-                  onClick={() => handleStatusClick(checkbox)} // Call handler
+                  onClick={() => handleStatusClick(checkbox)}
                 >
                   <p>{checkbox.name}</p>
                 </button>

@@ -34,8 +34,7 @@ export default function TaskDetailsPage() {
   const [error, setError] = useState<string | null>(null);
   const [statuses, setStatuses] = useState<StatusType[]>([]);
   const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);  
-  // Add type safety for the ID
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const taskId = typeof id === "string" ? id : "";
 
   useEffect(() => {
@@ -53,8 +52,8 @@ export default function TaskDetailsPage() {
             },
           }
         );
-        console.log("Fetched Task Data:", response.data); // Add this line
         setTask(response.data);
+        console.log("Fetched Task Status:", response.data.status);
       } catch (err) {
         console.error("Error fetching task:", err);
         setError("Failed to fetch task details.");
@@ -91,12 +90,18 @@ export default function TaskDetailsPage() {
     fetchData();
   }, []);
 
+  // ✅ Log task.status when task state updates
+  useEffect(() => {
+    if (task) {
+      console.log("Task Status (from task state):", task.status);
+    }
+  }, [task]);
+
   const handleStatusSelection = (id: number) => {
     setSelectedStatusId(id);
     console.log("Selected Status ID in Parent:", id);
   };
 
-  // Function to determine color based on status name
   const getStatusColor = (statusName: string | undefined) => {
     switch (statusName) {
       case "მაღალი":
@@ -106,7 +111,7 @@ export default function TaskDetailsPage() {
       case "დაბალი":
         return "green";
       default:
-        return "orange"; // Default to medium if unknown
+        return "orange";
     }
   };
 
@@ -149,27 +154,15 @@ export default function TaskDetailsPage() {
 
   const formatDueDateWithWeekday = (date: string | undefined) => {
     if (!date) return "N/A";
-
-    // Define the weekdays array
     const weekdays = ["კვი", "ორშ", "სამშ", "ოთხშ", "ხუთშ", "პარ", "შაბ"];
-
-    // Create a new Date object
     const dueDate = new Date(date);
-
-    // Get the weekday name
     const weekdayName = weekdays[dueDate.getDay()];
-
-    // Define the format for the date
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     };
-
-    // Format the date in DD/MM/YYYY
     const formattedDate = dueDate.toLocaleDateString("en-GB", options);
-
-    // Combine the weekday and formatted date
     return `${weekdayName} - ${formattedDate}`;
   };
 
@@ -203,6 +196,7 @@ export default function TaskDetailsPage() {
               <Status
                 statuses={statuses}
                 onStatusSelect={handleStatusSelection}
+                initialStatus={task?.status}
               />
             </div>
             <div className={styles.employeesWrapper}>
@@ -220,7 +214,7 @@ export default function TaskDetailsPage() {
                     {task?.department?.name}
                   </p>
                   <p className={styles.employeeData}>
-                    {task?.employee?.name} {task?.employee?.surname}{" "}
+                    {task?.employee?.name} {task?.employee?.surname}
                   </p>
                 </div>
               </div>
@@ -234,33 +228,9 @@ export default function TaskDetailsPage() {
           </div>
         </div>
         <div className={styles.rightSide}>
-        <Comments taskId={taskId} />
+          <Comments taskId={taskId} />
         </div>
       </div>
-
-      {/* {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : task ? (
-        <>
-          <p>
-            <strong>Description:</strong> {task.description}
-            <br />
-            <strong>Due Date:</strong> {task.due_date}
-            <br />
-            <strong>Department:</strong> {task.department?.name}
-            <br />
-            <strong>Status:</strong> {task.status?.name}
-            <br />
-            <strong>Priority:</strong> {task.priority?.name}
-            <br />
-            <strong>Employee:</strong> {task.employee?.name} {task.employee?.surname}
-          </p>
-        </>
-      ) : (
-        <p>No task found.</p>
-      )} */}
     </div>
   );
 }
