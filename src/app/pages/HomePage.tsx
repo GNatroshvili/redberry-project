@@ -1,4 +1,3 @@
-// HomePage.tsx
 "use client";
 import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
 import { DepartmentType, EmployeeType, PriorityType, TaskType } from "../types";
@@ -29,7 +28,7 @@ function HomePage({ departments, priorities, employees }: Props) {
   const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilter[]>([]);
-  const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385"; // Store your token securely
+  const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385";
 
   const fetchTasks = async () => {
     setLoading(true);
@@ -64,7 +63,6 @@ function HomePage({ departments, priorities, employees }: Props) {
   useEffect(() => {
     fetchTasks();
 
-    // Re-fetch tasks when returning to this tab
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         fetchTasks();
@@ -135,6 +133,13 @@ function HomePage({ departments, priorities, employees }: Props) {
     }
   };
 
+  const handleClearAllFilters = () => {
+    setSelectedDepartments([]);
+    setSelectedPriorities([]);
+    setSelectedEmployees([]);
+    setSelectedFilters([]);
+  };
+
   const filteredTasks = tasks.filter((task) => {
     const departmentMatch =
       selectedDepartments.length === 0 ||
@@ -180,11 +185,20 @@ function HomePage({ departments, priorities, employees }: Props) {
             onFilterApply={handleFilterApply}
           />
         </div>
-
-        <EmployeeName
-          selectedFilters={selectedFilters}
-          onRemoveFilter={handleRemoveFilter}
-        />
+        {selectedFilters.length > 0 && (
+          <div className={styles.filtersWrapper}>
+            <EmployeeName
+              selectedFilters={selectedFilters}
+              onRemoveFilter={handleRemoveFilter}
+            />
+            <button
+              className={styles.deleteAllFilter}
+              onClick={handleClearAllFilters}
+            >
+              გასუფთავება
+            </button>
+          </div>
+        )}
 
         <div className={styles.conditionWrapper}>
           <Condition

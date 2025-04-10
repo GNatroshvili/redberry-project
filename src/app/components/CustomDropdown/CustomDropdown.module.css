@@ -30,10 +30,7 @@
   width: 688px;
   position: absolute;
   top: 54px;
-  padding-top: 40px;
-  padding-right: 30px;
-  padding-bottom: 20px;
-  padding-left: 30px;
+  padding: 40px 30px 20px 30px;
   display: flex;
   flex-direction: column;
   gap: 25px;

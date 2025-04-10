@@ -14,6 +14,9 @@
 }
 
 .container {
+  overflow: scroll;
+  max-height: 400px;
+  scrollbar-width: none;  
   width: 550px;
   border: 1px solid #ccc;
   border-radius: 5px;

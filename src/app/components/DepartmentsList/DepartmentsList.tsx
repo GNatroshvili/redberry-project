@@ -7,7 +7,7 @@ type Props = {
   departments: DepartmentType[];
   onDepartmentSelect?: (department: DepartmentType) => void;
   value?: number;
-  size?: "small" | "medium" | "large" | string; // Supports both predefined and custom
+  size?: "small" | "medium" | "large" | string;
 };
 
 function CustomDropdown({ departments, onDepartmentSelect, value, size }: Props) {
@@ -15,39 +15,34 @@ function CustomDropdown({ departments, onDepartmentSelect, value, size }: Props)
   const [selectedDepartment, setSelectedDepartment] = useState<DepartmentType | null>(null);
 
   useEffect(() => {
-    if (departments && departments.length > 0) {
-      let defaultDepartment = null;
-
-      if (value) {
-        defaultDepartment = departments.find(d => d.id === value);
-      }
-
-      if (!defaultDepartment) {
-        defaultDepartment = departments.find((p) => p.name === "საშუალო") || departments[0];
-      }
-
-      if (defaultDepartment && selectedDepartment?.id !== defaultDepartment.id) {
-        setSelectedDepartment(defaultDepartment);
-        if (onDepartmentSelect) {
-          onDepartmentSelect(defaultDepartment);
-        }
-      }
+    let ignore = false;
+    
+    if (!departments?.length || selectedDepartment) return;
+    
+    const defaultDepartment = departments.find(d => d.id === value) || 
+                            departments.find(d => d.name === "საშუალო") || 
+                            departments[0];
+    
+    if (!ignore && defaultDepartment) {
+      setSelectedDepartment(defaultDepartment);
+      onDepartmentSelect?.(defaultDepartment);
     }
-  }, [departments, onDepartmentSelect, selectedDepartment, value]);
+
+    return () => {
+      ignore = true;
+    };
+  }, [departments, onDepartmentSelect, value, selectedDepartment]);
 
   const handleClick = (index: number) => {
-    setOpenedId(index === openedId ? -1 : index);
+    setOpenedId(prev => prev === index ? -1 : index);
   };
 
   const handleDepartmentClick = (department: DepartmentType) => {
+    if (department.id === selectedDepartment?.id) return;
     setSelectedDepartment(department);
     setOpenedId(-1);
-    if (onDepartmentSelect) {
-      onDepartmentSelect(department);
-    }
+    onDepartmentSelect?.(department);
   };
-
-  const dropdowns = [{ checkboxes: departments }];
 
   const getSizeClass = () => {
     if (size === "small") return styles.small;
@@ -70,34 +65,31 @@ function CustomDropdown({ departments, onDepartmentSelect, value, size }: Props)
         style={customSizeStyle}
       >
         <div className={styles.buttonsContainer}>
-          {dropdowns.map((dropdown, index) => (
-            <button
-              key={index.toString()}
-              onClick={() => handleClick(index)}
-              className={styles.dropdownButton}
-              type="button"
-            >
-              <div className={styles.buttonContent}>
-                {selectedDepartment && <span>{selectedDepartment.name}</span>}
-              </div>
-              <div style={{ rotate: openedId === index ? "180deg" : "0deg" }}>
-                <DropdownIcon
-                  fill={openedId === index ? "rgba(131, 56, 236, 1)" : "#000"}
-                />
-              </div>
-            </button>
-          ))}
+          <button
+            onClick={() => handleClick(0)}
+            className={styles.dropdownButton}
+            type="button"
+          >
+            <div className={styles.buttonContent}>
+              {selectedDepartment && <span>{selectedDepartment.name}</span>}
+            </div>
+            <div style={{ rotate: openedId === 0 ? "180deg" : "0deg" }}>
+              <DropdownIcon
+                fill={openedId === 0 ? "rgba(131, 56, 236, 1)" : "#000"}
+              />
+            </div>
+          </button>
         </div>
         {openedId !== -1 && (
           <div className={styles.dropdownContainer}>
-            {dropdowns[openedId]?.checkboxes?.map((checkbox, index) => (
-              <div key={index.toString()} className={styles.statusItem}>
+            {departments.map((department) => (
+              <div key={department.id} className={styles.statusItem}>
                 <button
                   className={styles.buttonContent}
-                  onClick={() => handleDepartmentClick(checkbox)}
+                  onClick={() => handleDepartmentClick(department)}
                   type="button"
                 >
-                  <p>{checkbox.name}</p>
+                  <p>{department.name}</p>
                 </button>
               </div>
             ))}

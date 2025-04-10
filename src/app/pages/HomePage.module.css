@@ -1,21 +1,39 @@
 .taskCardsContainer {
-    display: flex;
-    gap: 52px;
-    margin-top: 30px;
+  display: flex;
+  gap: 52px;
+  margin-top: 30px;
 }
 
 .taskLine {
-    display: flex;
-    flex-direction: column;
-    gap: 30px; 
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
 
 .conditionWrapper {
-    display: flex;
-    gap: 52px;
-    margin-top: 79px;
+  display: flex;
+  gap: 52px;
+  margin-top: 79px;
 }
 
 .noTasks {
-    width: 381px;
+  width: 381px;
+}
+
+.deleteAllFilter {
+  font-family: FiraGO;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  text-align: center;
+  color: #343a40;
+  background-color: transparent;
+  border: none;
+}
+
+.filtersWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

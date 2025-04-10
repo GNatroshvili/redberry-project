@@ -1,3 +1,7 @@
+body {
+  scrollbar-width: none;
+}
+
 .taskWrapper {
   max-width: 1680px;
   margin: auto;
@@ -5,7 +9,7 @@
   display: flex;
   flex-direction: column;
   gap: 55px;
-  padding: 65px 0 62px 55px;
+  padding: 65px 0 216px 55px;
   background-color: #FBF9FFA6;
   border: 0.3px solid #DDD2FF;
 }
@@ -32,7 +36,7 @@
 
 .rightSide {
   position: relative;
-  left: 331px;
+  left: 335px;
   top: 0;
 }
 

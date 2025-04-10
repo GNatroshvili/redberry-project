@@ -52,6 +52,7 @@
   display: flex;
   flex-direction: column;
   border: none;
+  width: 382px;
 }
 
 .buttonContent {
@@ -84,6 +85,9 @@
 
 .medium {
   width: 384px;
+  overflow: scroll;
+  max-height: 162px;
+  scrollbar-width: none;
 }
 
 .large {

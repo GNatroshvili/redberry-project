@@ -72,6 +72,7 @@
   align-items: center;
 }
 .calendarDropdown {
+  position: absolute;
   background-color: #fff;
   flex-direction: column;
   justify-content: center;

@@ -1,4 +1,5 @@
 import CustomCheckbox from "../CustomCheckbox/CustomCheckbox";
+import styles from "./EmployeeTitle.module.css"
 
 type Props = {
   name: string;
@@ -18,8 +19,8 @@ const EmployeeTitle = ({
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
       <CustomCheckbox isChecked={isChecked} handleChange={onChange} />
-      <img src={avatar} alt={`${name} ${surname}`} width={28} height={28} />
-      <span>
+      <img className={styles.img} src={avatar} alt={`${name} ${surname}`} width={28} height={28} />
+      <span className={styles.name}>
         {name} {surname}
       </span>
     </div>

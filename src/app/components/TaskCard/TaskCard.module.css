@@ -53,6 +53,7 @@
   line-height: 100%;
   letter-spacing: 0%;
   margin-top: 12px;
+  overflow: hidden;
 }
 
 .addressWrapper {
