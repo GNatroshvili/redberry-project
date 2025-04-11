@@ -10,8 +10,8 @@ body {
   flex-direction: column;
   gap: 55px;
   padding: 65px 0 216px 55px;
-  background-color: #FBF9FFA6;
-  border: 0.3px solid #DDD2FF;
+  background-color: #fbf9ffa6;
+  border: 0.3px solid #ddd2ff;
 }
 
 .firstLine {
@@ -65,4 +65,11 @@ body {
 
 .button:hover {
   background-color: #b588f4;
+}
+
+.btnWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

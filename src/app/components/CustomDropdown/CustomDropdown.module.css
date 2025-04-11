@@ -27,6 +27,9 @@
 }
 
 .dropdownContainer {
+  overflow: scroll;
+  max-height: 400px;
+  scrollbar-width: none;
   width: 688px;
   position: absolute;
   top: 54px;

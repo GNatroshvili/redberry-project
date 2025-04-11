@@ -12,10 +12,10 @@ import ResponsibleEmployeer from "../components/ResponsibleEmployeer/Responsible
 import InputField from "../components/InputField/InputField";
 import PageTitle from "../components/PageTitle/PageTitle";
 import Header from "../components/Header/Header";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const router = useRouter()
+  const router = useRouter();
   const [priorities, setPriorities] = useState<PriorityType[]>([]);
   const [departments, setDepartments] = useState<DepartmentType[]>([]);
   const [statuses, setStatuses] = useState<StatusType[]>([]);
@@ -157,12 +157,12 @@ export default function Home() {
       setSelectedStatusId(null);
       setSelectedEmployeeId(null);
       setSelectedDeadline(null);
-      console.log("here")
-      router.push('/')
+      console.log("here");
+      router.push("/");
     } catch (err) {
       if (!controller.signal.aborted) {
         console.error("Error creating task:", err);
-        setErrorMessage("Failed to create task. Please check the form data.");
+        setErrorMessage("Failed to create task.");
       }
     } finally {
       controller.abort();
@@ -215,10 +215,10 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.fourthLine}>
-          <div>
-              <button className={styles.button} onClick={handleCreateTask}>
-                დავალების შექმნა
-              </button>
+          <div className={styles.btnWrapper}>
+            <button className={styles.button} onClick={handleCreateTask}>
+              დავალების შექმნა
+            </button>
             {successMessage && (
               <p className={styles.success}>{successMessage}</p>
             )}
