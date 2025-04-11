@@ -48,7 +48,7 @@ function CustomDropdown({
           openedId !== -1 ? styles.openedTitle : ""
         }`}
       >
-        {title}
+        {title} {departmentName && `(${departmentName})`}
       </p>
       <div
         className={`${styles.container} ${

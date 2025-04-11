@@ -7,7 +7,7 @@ type Props = {
   href?: string;
 };
 
-const Button = ({ title, href }: Props) => {
+const Button = ({ title }: Props) => {
   return (
     <div>
       <Link href={"/Tasks"} className={styles.link}> 

@@ -107,7 +107,10 @@ const TaskCard = ({ task, borderColor }: Props) => {
 
   return (
     <Link href={`/task/${task.id}`}>
-      <div className={clsx(styles.taskCardWrapper, getBorderColorStyle())}>
+      <div
+        className={clsx(styles.taskCardWrapper, getBorderColorStyle())}
+        style={{ borderColor: borderColor }} // Use borderColor here
+      >
         <div className={styles.detailsWrapper}>
           <div className={styles.leftSide}>
             <Difficulty

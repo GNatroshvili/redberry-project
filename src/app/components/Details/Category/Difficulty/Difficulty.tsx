@@ -1,13 +1,15 @@
 import React from "react";
 import styles from "./Difficulty.module.css";
 
-type Props = {
-  size?: any,
-  color?: string,
-  text?: string,
-}
+type SizeType = "big" | "small";
 
-const Difficulty = ({ size, color, text } : Props) => {
+type Props = {
+  size?: SizeType;
+  color?: string;
+  text?: string;
+};
+
+const Difficulty = ({ size, color, text }: Props) => {
   const getIcon = () => {
     switch (color) {
       case "red":
@@ -75,9 +77,15 @@ const Difficulty = ({ size, color, text } : Props) => {
     }
   };
 
-  const defaultText = text ?? 
-    (color === "red" ? "მაღალი" : color === "green" ? "დაბალი" : color === "orange" ? "საშუალო" : "საშუალო");
-
+  const defaultText =
+    text ??
+    (color === "red"
+      ? "მაღალი"
+      : color === "green"
+      ? "დაბალი"
+      : color === "orange"
+      ? "საშუალო"
+      : "საშუალო");
 
   const {
     iconClass,

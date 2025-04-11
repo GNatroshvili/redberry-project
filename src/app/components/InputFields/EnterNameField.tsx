@@ -1,58 +1,23 @@
-// import React from "react";
-// import styles from "./EnterNameField.module.css";
-// import Image from "next/image";
-
-// type Props = {
-//   title: any;
-// };
-
-// const EnterNameField = ({ title }: Props) => {
-//   return (
-//     <div className={styles.container}>
-//       <p className={styles.title}>{title}</p>
-//       <div className={styles.inputWrapper}>
-//         <input type="text" className={styles.input} />
-//         <Image
-//           src="/verified.svg"
-//           alt="verified"
-//           width={18}
-//           height={18}
-//           className={styles.verified}
-//         />
-//       </div>
-
-//       <div className={styles.validationsWrapper}>
-//         <div className={styles.validations}>
-//           <p className={styles.validations}> მინიმუმ 2 სიმბოლო</p>
-//           <img src="./check.svg" alt="check-icon" />
-//         </div>
-//         <div className={styles.validations}>
-//           <p className={styles.validations}> მაქსიმუმ 255 სიმბოლო</p>
-//           <img src="./check.svg" alt="check-icon" />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default EnterNameField;
-
 import React from "react";
 import styles from "./EnterNameField.module.css";
 import Image from "next/image";
 import { useFormikContext } from "formik";
 import classNames from "classnames";
 
-type Props = {
+interface Props {
   title: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type: string;
   name: string;
-};
+}
+
+interface FormValues {
+  [key: string]: string; 
+}
 
 const EnterNameField = ({ title, value, onChange, type, name }: Props) => {
-  const { errors, touched } = useFormikContext<any>();
+  const { errors, touched } = useFormikContext<FormValues>();
   const hasError = touched[name] && !!errors[name];
   const isTooShort = value.length > 0 && value.length < 2;
   const isTooLong = value.length > 255;
@@ -66,7 +31,7 @@ const EnterNameField = ({ title, value, onChange, type, name }: Props) => {
         <input
           type={type}
           className={classNames(styles.input, {
-            [styles.inputError]: isTooShort || isTooLong,
+            [styles.inputError]: isTooShort || isTooLong || hasError, // Use hasError here
             [styles.inputValid]: isValidLength,
           })}
           value={value}
@@ -119,6 +84,7 @@ const EnterNameField = ({ title, value, onChange, type, name }: Props) => {
           />
           <p>მაქსიმუმ 255 სიმბოლო</p>
         </div>
+        {hasError && <p className={styles.formError}>{errors[name]}</p>}{" "}
       </div>
     </div>
   );

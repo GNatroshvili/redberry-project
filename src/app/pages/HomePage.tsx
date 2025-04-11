@@ -6,7 +6,7 @@ import styles from "./HomePage.module.css";
 import TaskCard from "../components/TaskCard/TaskCard";
 import React, { useState, useEffect } from "react";
 import EmployeeName from "../components/EmployeeName/EmployeeName";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 type SelectedFilter = {
   id: number;
@@ -52,9 +52,23 @@ function HomePage({ departments, priorities, employees }: Props) {
         console.error("Unexpected API response format:", response.data);
         setError("Received unexpected data format from the server");
       }
-    } catch (err: any) {
-      console.error("Error fetching tasks:", err);
-      setError(err.message || "Failed to fetch tasks. Please try again.");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        // Axios error
+        const axiosError = err as AxiosError;
+        console.error("Error fetching tasks:", axiosError);
+        setError(
+          axiosError.message || "Failed to fetch tasks. Please try again."
+        );
+      } else if (err instanceof Error) {
+        // Standard JavaScript Error
+        console.error("Error fetching tasks:", err);
+        setError(err.message || "Failed to fetch tasks. Please try again.");
+      } else {
+        // Unknown error
+        console.error("An unknown error occurred:", err);
+        setError("An unknown error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

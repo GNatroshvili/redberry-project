@@ -1,11 +1,15 @@
 import React from "react";
 import Styles from "./AddEmployeeButton.module.css";
 
-const AddEmployeeButton = (props: any) => {
+type Props = {
+  title: string;
+};
+
+const AddEmployeeButton = ({ title }: Props) => {
   return (
     <div className={Styles.addition}>
       <img src="/addition-icon.svg" alt="addition-icon" />
-      <p className={Styles.additionName}>{props.title}</p>
+      <p className={Styles.additionName}>{title}</p>
     </div>
   );
 };

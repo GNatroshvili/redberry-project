@@ -11,11 +11,10 @@ import "@fontsource/firago/600.css";
 import "@fontsource/firago/600-italic.css";
 import "@fontsource/firago/700.css";
 import "@fontsource/firago/700-italic.css";
-import styles from "./page.module.css";
 import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage";
 import api from "./api";
-import { DepartmentType, EmployeeType, PriorityType, StatusType } from "./types";
+import { DepartmentType, EmployeeType, PriorityType } from "./types";
 import PageTitle from "./components/PageTitle/PageTitle";
 
 export default function Home() {
@@ -44,7 +43,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <PageTitle text={"დავალებების გვერდი"}/>
+      <PageTitle text={"დავალებების გვერდი"} />
       <HomePage
         departments={departments}
         priorities={priorities}

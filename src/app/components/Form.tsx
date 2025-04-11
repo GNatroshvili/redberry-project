@@ -17,7 +17,6 @@ type Props = {
 
 // Configure validation constants
 const MAX_IMAGE_SIZE = 600 * 1024; // 600KB in bytes
-const NAME_REGEX = /^[\p{L}\s']+$/u;
 const GEORGIAN_LATIN_REGEX = /^[a-zA-Z\u10A0-\u10FF\s']+$/;
 
 const validationSchema = Yup.object({
@@ -41,7 +40,7 @@ function EmployeeForm({ departments }: Props) {
 
   const handleAvatarUpload = (file: File | null) => {
     setAvatarError(null);
-    
+
     if (file) {
       if (file.size > MAX_IMAGE_SIZE) {
         setAvatarError("გამოსახულების ზომა არ უნდა აღემატებოდეს 600KB-ს");
@@ -52,7 +51,7 @@ function EmployeeForm({ departments }: Props) {
         return;
       }
     }
-    
+
     setAvatar(file);
   };
 
@@ -130,15 +129,15 @@ function EmployeeForm({ departments }: Props) {
               />
             </div>
 
-            <UserAvatarUpload 
-              avatar={avatar} 
+            <UserAvatarUpload
+              avatar={avatar}
               setAvatar={handleAvatarUpload}
               error={avatarError}
             />
 
             <div className={styles.departmentsWrapper}>
               <DepartmentsList
-              size={"medium"}
+                size={"medium"}
                 departments={departments}
                 onDepartmentSelect={(department) =>
                   setFieldValue("position", department.id)
@@ -168,4 +167,3 @@ function EmployeeForm({ departments }: Props) {
 }
 
 export default EmployeeForm;
-

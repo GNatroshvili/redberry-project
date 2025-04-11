@@ -1,6 +1,5 @@
 "use client";
 import styles from "./CustomCheckbox.module.css";
-import { useState } from "react";
 import { TagColor } from "../../types";
 import CheckboxIcon from "../../icons/CheckboxIcon";
 

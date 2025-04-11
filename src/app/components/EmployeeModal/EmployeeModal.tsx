@@ -4,8 +4,13 @@ import EmployeeForm from "../Form";
 import styles from "./EmployeeModal.module.css";
 import Image from "next/image";
 
+interface Employee {
+  first_name: string;
+  last_name: string;
+}
+
 const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<Employee[]>([]); 
   const [departments, setDepartments] = useState([]);
   const dataFetchedRef = useRef(false);
 
@@ -54,13 +59,18 @@ const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
         </div>
         <h2 className={styles.modalTitle}>თანამშრომლის დამატება</h2>
 
-        {employees.map((employee: any, idx: number) => (
-          <div key={idx}>
-            <p>
-              {employee.first_name} {employee.last_name}
-            </p>
-          </div>
-        ))}
+        {employees.map(
+          (
+            employee: Employee,
+            idx: number 
+          ) => (
+            <div key={idx}>
+              <p>
+                {employee.first_name} {employee.last_name}
+              </p>
+            </div>
+          )
+        )}
 
         <EmployeeForm departments={departments} />
       </div>

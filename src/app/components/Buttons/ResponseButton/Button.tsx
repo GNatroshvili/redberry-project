@@ -2,15 +2,18 @@ import React from "react";
 import clsx from "clsx";
 import styles from "./Button.module.css";
 
-const Button = (props: any) => {
+interface ButtonProps {
+  title: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
+
+const Button: React.FC<ButtonProps> = ({ title, className, onClick }) => {
   return (
     <div>
-      <button 
-        className={clsx(styles.button, props.className)} 
-        onClick={props.onClick}
-      >
+      <button className={clsx(styles.button, className)} onClick={onClick}>
         <img src="/arrow.svg" alt="" className={styles.img} />
-        {props.title}
+        {title}
       </button>
     </div>
   );

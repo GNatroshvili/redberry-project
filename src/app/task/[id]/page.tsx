@@ -12,8 +12,8 @@ import "@fontsource/firago/700.css";
 import "@fontsource/firago/700-italic.css";
 
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
+import { useParams } from "next/navigation";
+import axios, { AxiosError } from "axios";
 import { TaskType, StatusType } from "../../types";
 import Header from "../../components/Header/Header";
 import PageTitle from "../../components/PageTitle/PageTitle";
@@ -30,15 +30,11 @@ type Color = "pink" | "orange" | "blue" | "yellow";
 
 export default function TaskDetailsPage() {
   const { id } = useParams();
-  const router = useRouter();
   const [task, setTask] = useState<TaskType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [statuses, setStatuses] = useState<StatusType[]>([]);
-  const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const taskId = typeof id === "string" ? id : "";
   const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385";
+  const [statuses, setStatuses] = useState<StatusType[]>([]);
 
   const taskFetchedRef = useRef(false);
   const statusFetchedRef = useRef(false);
@@ -48,8 +44,6 @@ export default function TaskDetailsPage() {
     taskFetchedRef.current = true;
 
     async function fetchTask() {
-      setLoading(true);
-      setError(null);
       try {
         const response = await axios.get(
           `https://momentum.redberryinternship.ge/api/tasks/${id}`,
@@ -63,11 +57,15 @@ export default function TaskDetailsPage() {
         );
         setTask(response.data);
         console.log("Fetched Task Status:", response.data.status);
-      } catch (err: any) {
-        console.error("Error fetching task:", err);
-        setError("Failed to fetch task details.");
-      } finally {
-        setLoading(false);
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          const axiosError = err as AxiosError;
+          console.error("Error fetching task:", axiosError);
+          setErrorMessage("Failed to fetch task details.");
+        } else {
+          console.error("An unexpected error occurred:", err);
+          setErrorMessage("An unexpected error occurred.");
+        }
       }
     }
 
@@ -91,9 +89,15 @@ export default function TaskDetailsPage() {
           }
         );
         setStatuses(statusesData);
-      } catch (error: any) {
-        console.error("Error fetching statuses:", error);
-        setErrorMessage("Error fetching initial data.");
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError;
+          console.error("Error fetching statuses:", axiosError);
+          setErrorMessage("Error fetching initial data.");
+        } else {
+          console.error("An unexpected error occurred:", error);
+          setErrorMessage("An unexpected error occurred.");
+        }
       }
     }
 
@@ -101,8 +105,6 @@ export default function TaskDetailsPage() {
   }, []);
 
   const handleStatusSelection = async (statusId: number) => {
-    setSelectedStatusId(statusId);
-    console.log("Selected Status ID in Parent:", statusId);
     try {
       const response = await axios.put(
         `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
@@ -137,9 +139,17 @@ export default function TaskDetailsPage() {
           `Failed to update task status (PUT): ${response.status}`
         );
       }
-    } catch (error: any) {
-      console.error("Error updating task status (PUT):", error);
-      setErrorMessage(`Failed to update task status (PUT): ${error.message}`);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        console.error("Error updating task status (PUT):", axiosError);
+        setErrorMessage(
+          `Failed to update task status (PUT): ${axiosError.message}`
+        );
+      } else {
+        console.error("An unexpected error occurred:", error);
+        setErrorMessage("An unexpected error occurred.");
+      }
     }
   };
 
@@ -182,7 +192,7 @@ export default function TaskDetailsPage() {
     return "orange";
   };
 
-  const formatDueDateWithWeekday = (date: string | undefined) => {
+  const formatDueDateWithWeekday = (date: string | undefined | null) => {
     if (!date) return "N/A";
     const weekdays = ["კვი", "ორშ", "სამშ", "ოთხშ", "ხუთშ", "პარ", "შაბ"];
     const dueDate = new Date(date);
@@ -216,7 +226,7 @@ export default function TaskDetailsPage() {
         <div className={styles.leftSide}>
           <PageTitle text={task ? task.name : "Loading..."} />
           {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-          <Description text={task?.description} />
+          <Description text={task?.description || ""} />
           <div className={styles.taskDetails}>
             <TaskDetails text={"დავალების დეტალები"} />
           </div>

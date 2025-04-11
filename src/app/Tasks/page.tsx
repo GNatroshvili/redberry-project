@@ -146,7 +146,6 @@ export default function Home() {
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
-      const result = await res.json();
       setSuccessMessage("Task created successfully!");
 
       // Reset form

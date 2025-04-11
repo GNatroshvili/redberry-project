@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
-import styles from "./Button.module.css"
-import InputField from '../../InputField/InputField'
+import React, { useState } from "react";
+import styles from "./Button.module.css";
+import InputField from "../../InputField/InputField";
 
-const Button = (props: any) => {
+interface Props {
+  title: string;
+}
+
+const Button = (props: Props) => {
   const [titleInputValue, setTitleInputValue] = useState("");
   const [descriptionInputValue, setDescriptionInputValue] = useState("");
 
@@ -16,23 +20,25 @@ const Button = (props: any) => {
     console.log("Description in Parent:", value);
   };
 
-
-
   return (
     <div>
-      <button className={styles.button}>
-        {props.title}
-      </button>
+      <button className={styles.button}>{props.title}</button>
       <InputField
         title="სათაური"
         width="300px"
         height="40px"
         onInputChange={handleTitleInputChange}
       />
+      <InputField
+        title="აღწერა"
+        width="300px"
+        height="40px"
+        onInputChange={handleDescriptionInputChange}
+      />
       <p>Title Value in Parent: {titleInputValue}</p>
-        <p>Description Value in Parent: {descriptionInputValue}</p>
+      <p>Description Value in Parent: {descriptionInputValue}</p>
     </div>
-  )
-}
+  );
+};
 
 export default Button;
