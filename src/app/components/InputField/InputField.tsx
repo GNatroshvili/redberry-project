@@ -10,6 +10,7 @@ interface InputFieldProps {
   width: string;
   height: string;
   onInputChange?: (value: string) => void;
+  value?: string; // Add optional value prop
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -17,9 +18,10 @@ const InputField: React.FC<InputFieldProps> = ({
   width,
   height,
   onInputChange,
+  value, // Destructure value prop
 }) => {
   const isDescription = title === "აღწერა";
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(value || ""); // Initialize input with value or empty string
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = async (
