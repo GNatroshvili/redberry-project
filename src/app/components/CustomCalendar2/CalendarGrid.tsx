@@ -18,8 +18,8 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
   onSelectDate,
 }) => {
   // Create rows of 7 days each
-  const rows = [];
-  let cells = [];
+  const rows: React.JSX.Element[][] = [];
+  let cells: React.JSX.Element[] = [];
 
   // Add weekday headers
   const weekDayHeaders = (

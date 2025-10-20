@@ -36,7 +36,7 @@ const validationSchema = Yup.object({
 function EmployeeForm({ departments }: Props) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
-  const defaultDepartmentId = departments?.[0]?.id || "";
+  const defaultDepartmentId = departments?.[0]?.id || 0;
 
   const handleAvatarUpload = (file: File | null) => {
     setAvatarError(null);

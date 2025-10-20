@@ -92,7 +92,7 @@
 .monthDisplay {
   color: #000;
   text-align: center;
-  justify-content: start;
+  justify-content: flex-start;
   align-self: stretch;
   align-items: center;
   gap: 4px;
@@ -119,9 +119,9 @@
   margin-bottom: auto;
 }
 .navigationButtons {
-  justify-content: start;
+  justify-content: flex-start;
   align-self: stretch;
-  align-items: start;
+  align-items: flex-start;
   gap: 8px;
   margin-top: auto;
   margin-bottom: auto;
@@ -148,8 +148,8 @@
   line-height: 1;
 }
 .calendarRow {
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
   display: flex;
 }
 .dayHeader {
@@ -161,8 +161,8 @@
 }
 .inactiveRow {
   color: #6c757d;
-  justify-content: start;
-  align-items: start;
+  justify-content: flex-start;
+  align-items: flex-start;
   display: flex;
 }
 .dayCell,

@@ -58,11 +58,12 @@ const DatePicker: React.FC<Props> = ({ onDateChange }) => {
       days.push({
         date: i,
         isCurrentMonth: true,
-        isSelected:
+        isSelected: !!(
           tempSelectedDate &&
           tempSelectedDate.getDate() === i &&
           tempSelectedDate.getMonth() === month &&
-          tempSelectedDate.getFullYear() === year,
+          tempSelectedDate.getFullYear() === year
+        ),
       });
     }
 
