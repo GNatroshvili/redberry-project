@@ -3,10 +3,25 @@ import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
 import { DepartmentType, EmployeeType, PriorityType, TaskType } from "../types";
 import Condition from "../components/Condition/Condition";
 import styles from "./HomePage.module.css";
-import TaskCard from "../components/TaskCard/TaskCard";
 import React, { useState, useEffect } from "react";
 import EmployeeName from "../components/EmployeeName/EmployeeName";
+import TaskCard from "../components/TaskCard/TaskCard";
 import axios, { AxiosError } from "axios";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  TouchSensor,
+  KeyboardSensor,
+  DragOverlay,
+  DragStartEvent,
+  rectIntersection,
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import DraggableTaskCard from "../components/TaskCard/DraggableTaskCard";
+import DroppableColumn from "../components/DroppableColumn";
 
 type SelectedFilter = {
   id: number;
@@ -22,6 +37,7 @@ type Props = {
 
 function HomePage({ departments, priorities, employees }: Props) {
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [activeTask, setActiveTask] = useState<TaskType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDepartments, setSelectedDepartments] = useState<number[]>([]);
@@ -29,6 +45,23 @@ function HomePage({ departments, priorities, employees }: Props) {
   const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilter[]>([]);
   const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385";
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   const fetchTasks = async () => {
     setLoading(true);
@@ -43,7 +76,7 @@ function HomePage({ departments, priorities, employees }: Props) {
             Accept: "application/json",
             Authorization: authToken,
           },
-        }
+        },
       );
 
       if (response.data && Array.isArray(response.data)) {
@@ -54,23 +87,79 @@ function HomePage({ departments, priorities, employees }: Props) {
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        // Axios error
         const axiosError = err as AxiosError;
         console.error("Error fetching tasks:", axiosError);
         setError(
-          axiosError.message || "Failed to fetch tasks. Please try again."
+          axiosError.message || "Failed to fetch tasks. Please try again.",
         );
       } else if (err instanceof Error) {
-        // Standard JavaScript Error
         console.error("Error fetching tasks:", err);
         setError(err.message || "Failed to fetch tasks. Please try again.");
       } else {
-        // Unknown error
         console.error("An unknown error occurred:", err);
         setError("An unknown error occurred. Please try again.");
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const task = active.data.current?.task as TaskType;
+    setActiveTask(task);
+  };
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveTask(null);
+
+    if (!over) return;
+
+    const taskId = active.id as string;
+    const newStatusId = parseInt(over.id as string);
+    const task = active.data.current?.task as TaskType;
+
+    if (task.status?.id === newStatusId) return;
+
+    // Optimistic update
+    const updatedTasks = tasks.map((t) => {
+      if (t.id.toString() === taskId) {
+        return {
+          ...t,
+          status: { id: newStatusId, name: "" }, // Name doesn't matter for local filter
+          status_id: newStatusId,
+        };
+      }
+      return t;
+    });
+    setTasks(updatedTasks);
+
+    try {
+      await axios.put(
+        `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
+        {
+          status_id: newStatusId,
+          name: task.name,
+          description: task.description,
+          due_date: task.due_date,
+          priority_id: task.priority?.id || task.priority_id,
+          employee_id: task.employee?.id || task.employee_id,
+          department_id: task.department?.id || task.department_id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: authToken,
+          },
+        },
+      );
+      console.log("Task status updated successfully");
+    } catch (err) {
+      console.error("Failed to update task status:", err);
+      // Revert if failed
+      fetchTasks();
     }
   };
 
@@ -90,7 +179,7 @@ function HomePage({ departments, priorities, employees }: Props) {
 
   const handleRemoveFilter = (
     id: number,
-    type: "department" | "priority" | "employee"
+    type: "department" | "priority" | "employee",
   ) => {
     switch (type) {
       case "department":
@@ -105,13 +194,13 @@ function HomePage({ departments, priorities, employees }: Props) {
     }
 
     setSelectedFilters((prev) =>
-      prev.filter((f) => f.id !== id || f.type !== type)
+      prev.filter((f) => f.id !== id || f.type !== type),
     );
   };
 
   const handleFilterApply = (
     type: "department" | "priority" | "employee",
-    ids: number[]
+    ids: number[],
   ) => {
     const getName = (id: number): string => {
       if (type === "department") {
@@ -178,16 +267,16 @@ function HomePage({ departments, priorities, employees }: Props) {
     "4": filteredTasks.filter((task) => task.status?.id === 4),
   } as TasksByStatus;
 
+  const statusInfo = [
+    { id: 1, title: "დასაწყები", color: "yellow" as const },
+    { id: 2, title: "პროგრესში", color: "orange" as const },
+    { id: 3, title: "მზად ტესტირებისთვის", color: "pink" as const },
+    { id: 4, title: "დასრულებული", color: "blue" as const },
+  ];
+
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          margin: "auto",
-          maxWidth: "1680px",
-        }}
-      >
+    <div className={styles.homePageWrapper}>
+      <div className={styles.container}>
         <div style={{ display: "flex", gap: "1rem" }}>
           <CustomDropdown
             departments={departments}
@@ -214,62 +303,66 @@ function HomePage({ departments, priorities, employees }: Props) {
           </div>
         )}
 
-        <div className={styles.conditionWrapper}>
-          <Condition
-            title={"დასაწყები"}
-            color={"yellow"}
-            count={tasksByStatus[1].length}
-          />
-          <Condition
-            title={"პროგრესში"}
-            color={"orange"}
-            count={tasksByStatus[2].length}
-          />
-          <Condition
-            title={"მზად ტესტირებისთვის"}
-            color={"pink"}
-            count={tasksByStatus[3].length}
-          />
-          <Condition
-            title={"დასრულებული"}
-            color={"blue"}
-            count={tasksByStatus[4].length}
-          />
-        </div>
-
-        <div className={styles.taskCardsContainer}>
-          {loading ? (
-            <div style={{ padding: "20px", textAlign: "center" }}>
-              <p>Loading tasks...</p>
-            </div>
-          ) : error ? (
-            <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
-              <p>Error: {error}</p>
-            </div>
-          ) : (
-            <>
-              {[1, 2, 3, 4].map((statusId) => {
-                const statusKey: string = `${statusId}`;
-                return (
-                  <div key={statusId} className={styles.taskLine}>
-                    {tasksByStatus[statusKey]?.map((task) => (
-                      <TaskCard key={task.id} task={task} />
-                    ))}
-                    {tasksByStatus[statusKey]?.length === 0 &&
-                      filteredTasks.length > 0 && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={rectIntersection}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <div className={styles.boardScrollContainer}>
+            <div className={styles.boardInner}>
+              <div className={styles.boardColumns}>
+                {statusInfo.map((status) => (
+                  <div key={status.id} className={styles.boardColumn}>
+                    <Condition
+                      title={status.title}
+                      color={status.color}
+                      count={tasksByStatus[status.id.toString()]?.length || 0}
+                    />
+                    <DroppableColumn
+                      id={status.id.toString()}
+                      className={styles.taskLine}
+                    >
+                      {tasksByStatus[status.id.toString()]?.map((task) => (
+                        <DraggableTaskCard key={task.id} task={task} />
+                      ))}
+                      {tasksByStatus[status.id.toString()]?.length === 0 && (
                         <p className={styles.noTasks}>
-                          No tasks in this status
+                          ამ სტატუსით დავალება არ არის
                         </p>
                       )}
+                    </DroppableColumn>
                   </div>
-                );
-              })}
-              {filteredTasks.length === 0 && !loading && !error && (
-                <p>No tasks found matching the criteria.</p>
+                ))}
+              </div>
+              <DragOverlay dropAnimation={null}>
+                {activeTask ? (
+                  <div
+                    style={{ transform: "rotate(2deg)", cursor: "grabbing" }}
+                  >
+                    <TaskCard task={activeTask} disableNavigation />
+                  </div>
+                ) : null}
+              </DragOverlay>
+
+              {loading && (
+                <div style={{ padding: "20px", textAlign: "center" }}>
+                  <p>იტვირთება...</p>
+                </div>
               )}
-            </>
-          )}
-        </div>
+              {error && (
+                <div
+                  style={{ padding: "20px", textAlign: "center", color: "red" }}
+                >
+                  <p>Error: {error}</p>
+                </div>
+              )}
+              {filteredTasks.length === 0 && !loading && !error && (
+                <p style={{ marginTop: "20px" }}>დავალებები ვერ მოიძებნა.</p>
+              )}
+            </div>
+          </div>
+        </DndContext>
       </div>
     </div>
   );

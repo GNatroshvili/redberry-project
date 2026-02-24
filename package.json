@@ -10,6 +10,9 @@
   },
   "dependencies": {
     "@date-io/dayjs": "^3.2.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fontsource/firago": "^5.2.5",
@@ -22,7 +25,7 @@
     "dayjs": "^1.11.13",
     "flatpickr": "^4.6.13",
     "formik": "^2.4.6",
-    "next": "15.2.3",
+    "next": "^16.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "yup": "^1.6.1"
@@ -33,7 +36,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.2.3",
+    "eslint-config-next": "^16.1.6",
     "typescript": "^5"
   }
 }

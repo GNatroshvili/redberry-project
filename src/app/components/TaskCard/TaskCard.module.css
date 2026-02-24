@@ -2,12 +2,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 381px;
+  width: 100%;
+  max-width: 381px;
   height: 217px;
   padding: 20px;
   color: black;
   border: 1px solid #ced4da;
   border-radius: 15px;
+  background-color: #fff;
 }
 
 .detailsWrapper {
@@ -75,17 +77,17 @@
 }
 
 .borderYellow {
-  border: 1px solid #F7BC30; 
+  border: 1px solid #f7bc30;
 }
 
 .borderOrange {
-  border: 1px solid #FB5607;
+  border: 1px solid #fb5607;
 }
 
 .borderPink {
-  border: 1px solid #FF006E; 
+  border: 1px solid #ff006e;
 }
 
 .borderBlue {
-  border: 1px solid #3A86FF;
+  border: 1px solid #3a86ff;
 }

@@ -1,23 +1,86 @@
-.taskCardsContainer {
+.homePageWrapper {
+  width: 100%;
+  padding-bottom: 50px;
+}
+
+.container {
   display: flex;
-  gap: 52px;
-  margin-top: 30px;
+  flex-direction: column;
+  margin: auto;
+  max-width: 1680px;
+  width: 100%;
+}
+
+.boardScrollContainer {
+  width: 100%;
+  overflow-x: hidden;
+  margin-top: 50px;
+  padding-bottom: 20px;
+}
+
+.boardInner {
+  min-width: max-content;
+}
+
+.boardColumns {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.boardColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 381px;
+  border-radius: 15px;
+  min-height: 120px;
+  transition: background-color 0.2s;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .taskLine {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  min-height: 120px;
+  padding-right: 10px;
+  background-color: transparent;
+  border: 2px dashed transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #8338ec #f8f9fa;
 }
 
-.conditionWrapper {
-  display: flex;
-  gap: 52px;
-  margin-top: 79px;
+.taskLine::-webkit-scrollbar {
+  width: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+.taskLine::-webkit-scrollbar-thumb {
+  background: #8338ec;
+  border-radius: 8px;
+}
+.taskLine::-webkit-scrollbar-thumb:hover {
+  background: #6f2dbd;
+}
+
+.taskLine.dnd-over {
+  background-color: #e9ecef;
+  border-color: #8338ec;
 }
 
 .noTasks {
-  width: 381px;
+  width: 100%;
+  text-align: center;
+  color: #6c757d;
+  font-family: FiraGO;
+  font-size: 14px;
 }
 
 .deleteAllFilter {
@@ -30,10 +93,36 @@
   color: #343a40;
   background-color: transparent;
   border: none;
+  cursor: pointer;
 }
 
 .filtersWrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .homePageWrapper {
+    padding-inline: 15px;
+  }
+
+  .boardScrollContainer {
+    overflow-x: visible;
+  }
+
+  .boardInner {
+    min-width: 0;
+  }
+
+  .boardColumns {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .boardColumn {
+    width: 100%;
+  }
 }
