@@ -3,9 +3,9 @@ import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
 import { DepartmentType, EmployeeType, PriorityType, TaskType } from "../types";
 import Condition from "../components/Condition/Condition";
 import styles from "./HomePage.module.css";
-import TaskCard from "../components/TaskCard/TaskCard";
 import React, { useState, useEffect } from "react";
 import EmployeeName from "../components/EmployeeName/EmployeeName";
+import TaskCard from "../components/TaskCard/TaskCard";
 import axios, { AxiosError } from "axios";
 import {
   DndContext,
@@ -13,9 +13,11 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  closestCorners,
   TouchSensor,
   KeyboardSensor,
+  DragOverlay,
+  DragStartEvent,
+  rectIntersection,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import DraggableTaskCard from "../components/TaskCard/DraggableTaskCard";
@@ -35,6 +37,7 @@ type Props = {
 
 function HomePage({ departments, priorities, employees }: Props) {
   const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [activeTask, setActiveTask] = useState<TaskType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedDepartments, setSelectedDepartments] = useState<number[]>([]);
@@ -57,7 +60,7 @@ function HomePage({ departments, priorities, employees }: Props) {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const fetchTasks = async () => {
@@ -73,7 +76,7 @@ function HomePage({ departments, priorities, employees }: Props) {
             Accept: "application/json",
             Authorization: authToken,
           },
-        }
+        },
       );
 
       if (response.data && Array.isArray(response.data)) {
@@ -86,7 +89,9 @@ function HomePage({ departments, priorities, employees }: Props) {
       if (axios.isAxiosError(err)) {
         const axiosError = err as AxiosError;
         console.error("Error fetching tasks:", axiosError);
-        setError(axiosError.message || "Failed to fetch tasks. Please try again.");
+        setError(
+          axiosError.message || "Failed to fetch tasks. Please try again.",
+        );
       } else if (err instanceof Error) {
         console.error("Error fetching tasks:", err);
         setError(err.message || "Failed to fetch tasks. Please try again.");
@@ -99,8 +104,15 @@ function HomePage({ departments, priorities, employees }: Props) {
     }
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const task = active.data.current?.task as TaskType;
+    setActiveTask(task);
+  };
+
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveTask(null);
 
     if (!over) return;
 
@@ -141,7 +153,7 @@ function HomePage({ departments, priorities, employees }: Props) {
             Accept: "application/json",
             Authorization: authToken,
           },
-        }
+        },
       );
       console.log("Task status updated successfully");
     } catch (err) {
@@ -167,7 +179,7 @@ function HomePage({ departments, priorities, employees }: Props) {
 
   const handleRemoveFilter = (
     id: number,
-    type: "department" | "priority" | "employee"
+    type: "department" | "priority" | "employee",
   ) => {
     switch (type) {
       case "department":
@@ -182,13 +194,13 @@ function HomePage({ departments, priorities, employees }: Props) {
     }
 
     setSelectedFilters((prev) =>
-      prev.filter((f) => f.id !== id || f.type !== type)
+      prev.filter((f) => f.id !== id || f.type !== type),
     );
   };
 
   const handleFilterApply = (
     type: "department" | "priority" | "employee",
-    ids: number[]
+    ids: number[],
   ) => {
     const getName = (id: number): string => {
       if (type === "department") {
@@ -293,7 +305,8 @@ function HomePage({ departments, priorities, employees }: Props) {
 
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCorners}
+          collisionDetection={rectIntersection}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <div className={styles.boardScrollContainer}>
@@ -314,19 +327,33 @@ function HomePage({ departments, priorities, employees }: Props) {
                         <DraggableTaskCard key={task.id} task={task} />
                       ))}
                       {tasksByStatus[status.id.toString()]?.length === 0 && (
-                        <p className={styles.noTasks}>ამ სტატუსით დავალება არ არის</p>
+                        <p className={styles.noTasks}>
+                          ამ სტატუსით დავალება არ არის
+                        </p>
                       )}
                     </DroppableColumn>
                   </div>
                 ))}
               </div>
+              <DragOverlay dropAnimation={null}>
+                {activeTask ? (
+                  <div
+                    style={{ transform: "rotate(2deg)", cursor: "grabbing" }}
+                  >
+                    <TaskCard task={activeTask} disableNavigation />
+                  </div>
+                ) : null}
+              </DragOverlay>
+
               {loading && (
                 <div style={{ padding: "20px", textAlign: "center" }}>
                   <p>იტვირთება...</p>
                 </div>
               )}
               {error && (
-                <div style={{ padding: "20px", textAlign: "center", color: "red" }}>
+                <div
+                  style={{ padding: "20px", textAlign: "center", color: "red" }}
+                >
                   <p>Error: {error}</p>
                 </div>
               )}

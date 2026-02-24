@@ -21,7 +21,13 @@ const DroppableColumn = ({ id, children, className }: Props) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} className={className}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={
+        isOver && className ? `${className} dnd-over` : className || undefined
+      }
+    >
       {children}
     </div>
   );

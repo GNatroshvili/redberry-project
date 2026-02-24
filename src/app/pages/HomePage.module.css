@@ -25,7 +25,8 @@
 
 .boardColumns {
   display: flex;
-  gap: 52px;
+  justify-content: space-between;
+  height: 100vh;
 }
 
 .boardColumn {
@@ -33,13 +34,48 @@
   flex-direction: column;
   gap: 30px;
   width: 381px;
+  border-radius: 15px;
+  min-height: 120px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  transition: background-color 0.2s;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .taskLine {
   display: flex;
   flex-direction: column;
   gap: 30px;
-  min-height: 200px;
+  min-height: 120px;
+  padding: 10px;
+  background-color: transparent;
+  border: 2px dashed transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #8338ec #f8f9fa;
+}
+
+.taskLine::-webkit-scrollbar {
+  width: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+.taskLine::-webkit-scrollbar-thumb {
+  background: #8338ec;
+  border-radius: 8px;
+}
+.taskLine::-webkit-scrollbar-thumb:hover {
+  background: #6f2dbd;
+}
+
+.taskLine.dnd-over {
+  background-color: #e9ecef;
+  border-color: #8338ec;
 }
 
 .noTasks {

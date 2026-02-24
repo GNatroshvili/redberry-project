@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "./TaskCard.module.css";
 import clsx from "clsx";
 import Difficulty from "../Details/Category/Difficulty/Difficulty";
@@ -11,6 +11,7 @@ type Color = "pink" | "orange" | "blue" | "yellow";
 type Props = {
   task: TaskType;
   borderColor?: Color;
+  disableNavigation?: boolean;
 };
 
 const georgianMonthsShort = [
@@ -28,9 +29,10 @@ const georgianMonthsShort = [
   "დეკ",
 ];
 
-const TaskCard = ({ task, borderColor }: Props) => {
+const TaskCard = ({ task, borderColor, disableNavigation }: Props) => {
+  const router = useRouter();
   const formatDateGeorgian = (
-    dateString: string | null | undefined
+    dateString: string | null | undefined,
   ): string => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -45,7 +47,7 @@ const TaskCard = ({ task, borderColor }: Props) => {
   };
 
   const getPriorityColor = (
-    priorityName: string | undefined
+    priorityName: string | undefined,
   ): "red" | "orange" | "green" | undefined => {
     if (priorityName === "მაღალი") return "red";
     if (priorityName === "საშუალო") return "orange";
@@ -54,7 +56,7 @@ const TaskCard = ({ task, borderColor }: Props) => {
   };
 
   const getCategoryName = (
-    CategoryName: string | undefined
+    CategoryName: string | undefined,
   ):
     | "დიზაინი"
     | "მარკეტინგი"
@@ -105,47 +107,55 @@ const TaskCard = ({ task, borderColor }: Props) => {
     }
   };
 
+  const handleClick = () => {
+    if (!disableNavigation) {
+      router.push(`/task/${task.id}`);
+    }
+  };
+
   return (
-    <Link href={`/task/${task.id}`}>
-      <div
-        className={clsx(styles.taskCardWrapper, getBorderColorStyle())}
-        style={{ borderColor: borderColor }} // Use borderColor here
-      >
-        <div className={styles.detailsWrapper}>
-          <div className={styles.leftSide}>
-            <Difficulty
-              size="big"
-              color={getPriorityColor(task.priority?.name)}
-            />
-            <Category
-              title={getCategoryName(task.department?.name) || "N/A"}
-              color={getCategoryColor(task.department?.name)}
-            />
-          </div>
-          <div className={styles.rightSide}>
-            <span className={styles.dueDate}>
-              {formatDateGeorgian(task.due_date)}
-            </span>
-          </div>
-        </div>
-        <div className={styles.contentWrapper}>
-          <p className={styles.title}>{task.name}</p>
-          <p className={styles.description}>{task.description}</p>
-        </div>
-        <div className={styles.addressWrapper}>
-          <img
-            src={task.employee?.avatar || "/avatar.svg"}
-            alt={task.employee?.name}
-            onError={(e) => (e.currentTarget.src = "/avatar.svg")}
-            className={styles.img}
+    <div
+      className={clsx(styles.taskCardWrapper, getBorderColorStyle())}
+      style={{
+        borderColor: borderColor,
+        cursor: disableNavigation ? "grabbing" : "pointer",
+      }}
+      onClick={handleClick}
+    >
+      <div className={styles.detailsWrapper}>
+        <div className={styles.leftSide}>
+          <Difficulty
+            size="big"
+            color={getPriorityColor(task.priority?.name)}
           />
-          <div className={styles.commentsWrapper}>
-            <img src="/Comments.svg" alt="comments-icon" />
-            <span>{task.total_comments}</span>
-          </div>
+          <Category
+            title={getCategoryName(task.department?.name) || "N/A"}
+            color={getCategoryColor(task.department?.name)}
+          />
+        </div>
+        <div className={styles.rightSide}>
+          <span className={styles.dueDate}>
+            {formatDateGeorgian(task.due_date)}
+          </span>
         </div>
       </div>
-    </Link>
+      <div className={styles.contentWrapper}>
+        <p className={styles.title}>{task.name}</p>
+        <p className={styles.description}>{task.description}</p>
+      </div>
+      <div className={styles.addressWrapper}>
+        <img
+          src={task.employee?.avatar || "/avatar.svg"}
+          alt={task.employee?.name}
+          onError={(e) => (e.currentTarget.src = "/avatar.svg")}
+          className={styles.img}
+        />
+        <div className={styles.commentsWrapper}>
+          <img src="/Comments.svg" alt="comments-icon" />
+          <span>{task.total_comments}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 

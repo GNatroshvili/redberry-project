@@ -10,17 +10,18 @@ type Props = {
 };
 
 const DraggableTaskCard = ({ task }: Props) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: task.id.toString(),
-    data: {
-      task,
-    },
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: task.id.toString(),
+      data: {
+        task,
+      },
+    });
 
   const style = {
     transform: CSS.Translate.toString(transform),
-    opacity: isDragging ? 0.5 : 1,
-    cursor: "grab",
+    opacity: isDragging ? 0.3 : 1, // Make it very translucent but still there
+    cursor: isDragging ? "grabbing" : "grab",
     zIndex: isDragging ? 999 : 1,
   };
 
