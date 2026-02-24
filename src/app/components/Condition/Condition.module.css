@@ -1,5 +1,6 @@
 .condition {
-    width: 381px;
+    width: 100%;
+    max-width: 381px;
     height: 54px;
     border-radius: 10px;
     display: flex;

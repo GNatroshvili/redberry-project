@@ -1,23 +1,53 @@
-.taskCardsContainer {
+.homePageWrapper {
+  width: 100%;
+  padding-inline: 20px;
+  padding-bottom: 50px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 1680px;
+  width: 100%;
+}
+
+.boardScrollContainer {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 50px;
+  padding-bottom: 20px;
+}
+
+.boardInner {
+  min-width: max-content;
+}
+
+.boardColumns {
   display: flex;
   gap: 52px;
-  margin-top: 30px;
+}
+
+.boardColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 381px;
 }
 
 .taskLine {
   display: flex;
   flex-direction: column;
   gap: 30px;
-}
-
-.conditionWrapper {
-  display: flex;
-  gap: 52px;
-  margin-top: 79px;
+  min-height: 200px;
 }
 
 .noTasks {
-  width: 381px;
+  width: 100%;
+  text-align: center;
+  color: #6c757d;
+  font-family: FiraGO;
+  font-size: 14px;
 }
 
 .deleteAllFilter {
@@ -30,10 +60,36 @@
   color: #343a40;
   background-color: transparent;
   border: none;
+  cursor: pointer;
 }
 
 .filtersWrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .homePageWrapper {
+    padding-inline: 15px;
+  }
+
+  .boardScrollContainer {
+    overflow-x: visible;
+  }
+
+  .boardInner {
+    min-width: 0;
+  }
+
+  .boardColumns {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .boardColumn {
+    width: 100%;
+  }
 }
