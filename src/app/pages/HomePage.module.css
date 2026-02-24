@@ -1,6 +1,5 @@
 .homePageWrapper {
   width: 100%;
-  padding-inline: 20px;
   padding-bottom: 50px;
 }
 
@@ -14,7 +13,7 @@
 
 .boardScrollContainer {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   margin-top: 50px;
   padding-bottom: 20px;
 }
