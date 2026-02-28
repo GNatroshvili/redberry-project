@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./InputField.module.css";
 import { nameValidation } from "../../ValidationSchemas/validationSchemas";
 import * as Yup from "yup";
@@ -21,8 +21,15 @@ const InputField: React.FC<InputFieldProps> = ({
   value, // Destructure value prop
 }) => {
   const isDescription = title === "აღწერა";
-  const [input, setInput] = useState(value || ""); // Initialize input with value or empty string
+  const [input, setInput] = useState(value || "");
   const [error, setError] = useState<string | null>(null);
+
+  // Sync with external value changes (e.g. form reset)
+  useEffect(() => {
+    if (value !== undefined && value !== input) {
+      setInput(value);
+    }
+  }, [value]);
 
   const handleChange = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

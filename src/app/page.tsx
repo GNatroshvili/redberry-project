@@ -1,16 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import "@fontsource/firago";
-import "@fontsource/firago/300.css";
-import "@fontsource/firago/300-italic.css";
-import "@fontsource/firago/400.css";
-import "@fontsource/firago/400-italic.css";
-import "@fontsource/firago/500.css";
-import "@fontsource/firago/500-italic.css";
-import "@fontsource/firago/600.css";
-import "@fontsource/firago/600-italic.css";
-import "@fontsource/firago/700.css";
-import "@fontsource/firago/700-italic.css";
 import Header from "./components/Header/Header";
 import HomePage from "./pages/HomePage";
 import api from "./api";
@@ -23,21 +12,36 @@ export default function Home() {
   const [employees, setEmployees] = useState<EmployeeType[]>([]);
 
   useEffect(() => {
+    let ignore = false;
+    const controller = new AbortController();
+
     async function fetchData() {
       try {
-        const { data: prioritiesData } = await api.get("/api/priorities");
-        const { data: departmentsData } = await api.get("/api/departments");
-        const { data: employeesData } = await api.get("/api/employees");
+        const [prioritiesRes, departmentsRes, employeesRes] =
+          await Promise.all([
+            api.get("/api/priorities", { signal: controller.signal }),
+            api.get("/api/departments", { signal: controller.signal }),
+            api.get("/api/employees", { signal: controller.signal }),
+          ]);
 
-        setPriorities(prioritiesData);
-        setDepartments(departmentsData);
-        setEmployees(employeesData);
+        if (!ignore) {
+          setPriorities(prioritiesRes.data);
+          setDepartments(departmentsRes.data);
+          setEmployees(employeesRes.data);
+        }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        if (!ignore) {
+          console.error("Error fetching data:", error);
+        }
       }
     }
 
     fetchData();
+
+    return () => {
+      ignore = true;
+      controller.abort();
+    };
   }, []);
 
   return (

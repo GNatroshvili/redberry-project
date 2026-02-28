@@ -1,17 +1,6 @@
 "use client";
-import "@fontsource/firago";
-import "@fontsource/firago/300.css";
-import "@fontsource/firago/300-italic.css";
-import "@fontsource/firago/400.css";
-import "@fontsource/firago/400-italic.css";
-import "@fontsource/firago/500.css";
-import "@fontsource/firago/500-italic.css";
-import "@fontsource/firago/600.css";
-import "@fontsource/firago/600-italic.css";
-import "@fontsource/firago/700.css";
-import "@fontsource/firago/700-italic.css";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { TaskType, StatusType } from "../../types";
@@ -25,15 +14,20 @@ import styles from "./page.module.css";
 import Description from "../../components/Description/Description";
 import TaskDetails from "../../components/TaskDetails/TaskDetails";
 import TaskComponents from "../../components/TaskComponents/TaskComponents";
+import {
+  AUTH_TOKEN,
 
-type Color = "pink" | "orange" | "blue" | "yellow";
+  getCategoryName,
+  getCategoryColor,
+  getPriorityColor,
+  formatDueDateWithWeekday,
+} from "../../constants";
 
 export default function TaskDetailsPage() {
   const { id } = useParams();
   const [task, setTask] = useState<TaskType | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const taskId = typeof id === "string" ? id : "";
-  const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385";
   const [statuses, setStatuses] = useState<StatusType[]>([]);
 
   const taskFetchedRef = useRef(false);
@@ -46,17 +40,16 @@ export default function TaskDetailsPage() {
     async function fetchTask() {
       try {
         const response = await axios.get(
-          `https://momentum.redberryinternship.ge/api/tasks/${id}`,
+          `/api/tasks/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
-              Authorization: authToken,
+              Authorization: AUTH_TOKEN,
             },
           }
         );
         setTask(response.data);
-        console.log("Fetched Task Status:", response.data.status);
       } catch (err: unknown) {
         if (axios.isAxiosError(err)) {
           const axiosError = err as AxiosError;
@@ -79,12 +72,12 @@ export default function TaskDetailsPage() {
     async function fetchStatuses() {
       try {
         const { data: statusesData } = await axios.get(
-          "https://momentum.redberryinternship.ge/api/statuses",
+          `/api/statuses`,
           {
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
-              Authorization: authToken,
+              Authorization: AUTH_TOKEN,
             },
           }
         );
@@ -104,10 +97,10 @@ export default function TaskDetailsPage() {
     fetchStatuses();
   }, []);
 
-  const handleStatusSelection = async (statusId: number) => {
+  const handleStatusSelection = useCallback(async (statusId: number) => {
     try {
       const response = await axios.put(
-        `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
+        `/api/tasks/${taskId}`,
         {
           status_id: statusId,
           name: task?.name,
@@ -121,7 +114,7 @@ export default function TaskDetailsPage() {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: authToken,
+            Authorization: AUTH_TOKEN,
           },
         }
       );
@@ -132,9 +125,7 @@ export default function TaskDetailsPage() {
             ? { ...prevTask, status: statuses.find((s) => s.id === statusId) }
             : null
         );
-        console.log("Task status updated successfully on the server.");
       } else {
-        console.error("Failed to update task status (PUT):", response.status);
         setErrorMessage(
           `Failed to update task status (PUT): ${response.status}`
         );
@@ -151,60 +142,7 @@ export default function TaskDetailsPage() {
         setErrorMessage("An unexpected error occurred.");
       }
     }
-  };
-
-  const getStatusColor = (statusName: string | undefined) => {
-    switch (statusName) {
-      case "მაღალი":
-        return "red";
-      case "საშუალო":
-        return "orange";
-      case "დაბალი":
-        return "green";
-      default:
-        return "orange";
-    }
-  };
-
-  const getCategoryName = (CategoryName: string | undefined) => {
-    if (CategoryName === "დიზაინერების დეპარტამენტი") return "დიზაინი";
-    if (CategoryName === "გაყიდვები და მარკეტინგის დეპარტამენტი")
-      return "მარკეტინგი";
-    if (CategoryName === "ლოჯოსტიკის დეპარტამენტი") return "ლოჯისტიკა";
-    if (CategoryName === "ტექნოლოგიების დეპარტამენტი") return "ინფ. ტექ";
-    if (CategoryName === "ადმინისტრაციის დეპარტამენტი") return "ადმინისტრაცია";
-    if (CategoryName === "ადამიანური რესურსების დეპარტამენტი") return "HR";
-    if (CategoryName === "ფინანსების დეპარტამენტი") return "ფინანსები";
-    if (CategoryName === "მედიის დეპარტამენტი") return "მედია";
-    return undefined;
-  };
-
-  const getCategoryColor = (CategoryName: string | undefined): Color => {
-    if (CategoryName === "დიზაინერების დეპარტამენტი") return "pink";
-    if (CategoryName === "ლოჯოსტიკის დეპარტამენტი") return "blue";
-    if (CategoryName === "გაყიდვები და მარკეტინგის დეპარტამენტი")
-      return "orange";
-    if (CategoryName === "ტექნოლოგიების დეპარტამენტი") return "yellow";
-    if (CategoryName === "ადმინისტრაციის დეპარტამენტი") return "pink";
-    if (CategoryName === "ადამიანური რესურსების დეპარტამენტი") return "blue";
-    if (CategoryName === "ფინანსების დეპარტამენტი") return "orange";
-    if (CategoryName === "მედიის დეპარტამენტი") return "yellow";
-    return "orange";
-  };
-
-  const formatDueDateWithWeekday = (date: string | undefined | null) => {
-    if (!date) return "N/A";
-    const weekdays = ["კვი", "ორშ", "სამშ", "ოთხშ", "ხუთშ", "პარ", "შაბ"];
-    const dueDate = new Date(date);
-    const weekdayName = weekdays[dueDate.getDay()];
-    const options: Intl.DateTimeFormatOptions = {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    };
-    const formattedDate = dueDate.toLocaleDateString("en-GB", options);
-    return `${weekdayName} - ${formattedDate}`;
-  };
+  }, [taskId, task, statuses]);
 
   return (
     <div>
@@ -213,7 +151,7 @@ export default function TaskDetailsPage() {
         {task && (
           <Difficulty
             size="big"
-            color={getStatusColor(task.priority?.name)}
+            color={getPriorityColor(task.priority?.name) || "orange"}
             text={task.priority?.name}
           />
         )}

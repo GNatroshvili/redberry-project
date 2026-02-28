@@ -8,7 +8,7 @@ type Props = {
   className?: string;
 };
 
-const DroppableColumn = ({ id, children, className }: Props) => {
+const DroppableColumn = React.memo(({ id, children, className }: Props) => {
   const { setNodeRef, isOver } = useDroppable({
     id,
   });
@@ -31,6 +31,8 @@ const DroppableColumn = ({ id, children, className }: Props) => {
       {children}
     </div>
   );
-};
+});
+
+DroppableColumn.displayName = "DroppableColumn";
 
 export default DroppableColumn;
