@@ -9,11 +9,12 @@ import InputFile from "./InputFile/InputFile";
 import styles from "./Form.module.css";
 import CancelButton from "./CancelButton/CancelButton";
 import DepartmentsList from "../components/DepartmentsList/DepartmentsList";
-import { DepartmentType } from "../types";
+import { DepartmentType, EmployeeType } from "../types";
 import { MAX_IMAGE_SIZE, GEORGIAN_LATIN_REGEX, AUTH_TOKEN } from "../constants";
 
 type Props = {
   departments: DepartmentType[];
+  onSuccess?: (employee?: EmployeeType) => void;
 };
 
 const validationSchema = Yup.object({
@@ -30,7 +31,7 @@ const validationSchema = Yup.object({
   position: Yup.number().required("პოზიცია სავალდებულოა"),
 });
 
-function EmployeeForm({ departments }: Props) {
+function EmployeeForm({ departments, onSuccess }: Props) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const defaultDepartmentId = departments?.[0]?.id || 0;
@@ -94,6 +95,7 @@ function EmployeeForm({ departments }: Props) {
           resetForm();
           setAvatar(null);
           setAvatarError(null);
+          onSuccess?.(result);
         } catch (err) {
           console.error("Error sending form data:", err);
         }

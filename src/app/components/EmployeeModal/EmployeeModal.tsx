@@ -3,10 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import EmployeeForm from "../Form";
 import styles from "./EmployeeModal.module.css";
 import Image from "next/image";
-import { DepartmentType } from "../../types";
+import { DepartmentType, EmployeeType } from "../../types";
 import { AUTH_TOKEN } from "../../constants";
 
-const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
+const EmployeeModal = ({ onClose, onSuccess }: { onClose: () => void; onSuccess?: (employee?: EmployeeType) => void }) => {
   const [departments, setDepartments] = useState<DepartmentType[]>([]);
   const dataFetchedRef = useRef(false);
 
@@ -42,7 +42,7 @@ const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
           />
         </div>
         <h2 className={styles.modalTitle}>თანამშრომლის დამატება</h2>
-        <EmployeeForm departments={departments} />
+        <EmployeeForm departments={departments} onSuccess={(employee) => { onSuccess?.(employee); onClose(); }} />
       </div>
     </div>
   );

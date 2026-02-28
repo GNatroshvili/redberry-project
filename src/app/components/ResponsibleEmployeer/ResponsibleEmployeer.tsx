@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./ResponsibleEmployeer.module.css";
 import DropdownIcon from "../../icons/DropdownIcon";
 import { EmployeeType } from "../../types";
 import AddEmployeeButton from "../Buttons/AddEmployeeButton/AddEmployeeButton";
+import EmployeeModal from "../EmployeeModal/EmployeeModal";
 import { AUTH_TOKEN } from "../../constants";
 
 type Props = {
@@ -11,48 +12,49 @@ type Props = {
 
 function CustomDropdown({ onEmployeeSelect }: Props) {
   const [opened, setOpened] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<EmployeeType | null>(null);
   const [employees, setEmployees] = useState<EmployeeType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchEmployees = useCallback(async (signal?: AbortSignal) => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/employees", {
+        signal,
+        headers: {
+          Authorization: AUTH_TOKEN,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch employees");
+      const data = await res.json();
+      setEmployees(data);
+      setLoading(false);
+    } catch (err) {
+      if (!(err instanceof DOMException && (err as DOMException).name === "AbortError")) {
+        setError((err as Error).message);
+        setLoading(false);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const controller = new AbortController();
-    let ignore = false;
+    fetchEmployees(controller.signal);
+    return () => controller.abort();
+  }, [fetchEmployees]);
 
-    const fetchEmployees = async () => {
-      try {
-        const res = await fetch(
-          "/api/employees",
-          {
-            signal: controller.signal,
-            headers: {
-              Authorization: AUTH_TOKEN,
-            }
-          }
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch employees");
-        const data = await res.json();
-        
-        if (!ignore) {
-          setEmployees(data);
-          setLoading(false);
-        }
-      } catch (err) {
-        if (!ignore && !controller.signal.aborted) {
-          setError((err as Error).message);
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchEmployees();
-    return () => {
-      controller.abort();
-      ignore = true;
-    };
-  }, []);
+  const handleEmployeeCreated = async (employee?: EmployeeType) => {
+    setShowModal(false);
+    await fetchEmployees();
+    if (employee) {
+      setSelectedEmployee(employee);
+      setOpened(false);
+      onEmployeeSelect?.(employee.id);
+    }
+  };
 
   const handleSelectEmployee = (employee: EmployeeType) => {
     if (employee.id === selectedEmployee?.id) return;
@@ -93,7 +95,10 @@ function CustomDropdown({ onEmployeeSelect }: Props) {
 
         {opened && (
           <div className={styles.dropdownContainer}>
-            <AddEmployeeButton title={"დაამატე თანამშრომელი"} />
+            <AddEmployeeButton
+              title={"დაამატე თანამშრომელი"}
+              onClick={() => setShowModal(true)}
+            />
 
             {loading ? (
               <p>Loading...</p>
@@ -122,6 +127,12 @@ function CustomDropdown({ onEmployeeSelect }: Props) {
           </div>
         )}
       </div>
+      {showModal && (
+        <EmployeeModal
+          onClose={() => setShowModal(false)}
+          onSuccess={handleEmployeeCreated}
+        />
+      )}
     </div>
   );
 }
