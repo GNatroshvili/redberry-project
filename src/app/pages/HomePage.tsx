@@ -3,10 +3,10 @@ import CustomDropdown from "../components/CustomDropdown/CustomDropdown";
 import { DepartmentType, EmployeeType, PriorityType, TaskType } from "../types";
 import Condition from "../components/Condition/Condition";
 import styles from "./HomePage.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import EmployeeName from "../components/EmployeeName/EmployeeName";
 import TaskCard from "../components/TaskCard/TaskCard";
-import axios, { AxiosError } from "axios";
+import api from "../api";
 import {
   DndContext,
   PointerSensor,
@@ -44,7 +44,6 @@ function HomePage({ departments, priorities, employees }: Props) {
   const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilter[]>([]);
-  const authToken = "Bearer 9e882e2f-3297-435e-b537-67817136c385";
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -63,21 +62,12 @@ function HomePage({ departments, priorities, employees }: Props) {
     }),
   );
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get(
-        "https://momentum.redberryinternship.ge/api/tasks",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: authToken,
-          },
-        },
-      );
+      const response = await api.get("/api/tasks");
 
       if (response.data && Array.isArray(response.data)) {
         setTasks(response.data);
@@ -86,31 +76,20 @@ function HomePage({ departments, priorities, employees }: Props) {
         setError("Received unexpected data format from the server");
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError;
-        console.error("Error fetching tasks:", axiosError);
-        setError(
-          axiosError.message || "Failed to fetch tasks. Please try again.",
-        );
-      } else if (err instanceof Error) {
-        console.error("Error fetching tasks:", err);
-        setError(err.message || "Failed to fetch tasks. Please try again.");
-      } else {
-        console.error("An unknown error occurred:", err);
-        setError("An unknown error occurred. Please try again.");
-      }
+      console.error("Error fetching tasks:", err);
+      setError("Failed to fetch tasks. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleDragStart = (event: DragStartEvent) => {
+  const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const task = active.data.current?.task as TaskType;
     setActiveTask(task);
-  };
+  }, []);
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = useCallback(async (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveTask(null);
 
@@ -123,45 +102,30 @@ function HomePage({ departments, priorities, employees }: Props) {
     if (task.status?.id === newStatusId) return;
 
     // Optimistic update
-    const updatedTasks = tasks.map((t) => {
-      if (t.id.toString() === taskId) {
-        return {
-          ...t,
-          status: { id: newStatusId, name: "" }, // Name doesn't matter for local filter
-          status_id: newStatusId,
-        };
-      }
-      return t;
-    });
-    setTasks(updatedTasks);
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id.toString() === taskId
+          ? { ...t, status: { id: newStatusId, name: "" }, status_id: newStatusId }
+          : t
+      )
+    );
 
     try {
-      await axios.put(
-        `https://momentum.redberryinternship.ge/api/tasks/${taskId}`,
-        {
-          status_id: newStatusId,
-          name: task.name,
-          description: task.description,
-          due_date: task.due_date,
-          priority_id: task.priority?.id || task.priority_id,
-          employee_id: task.employee?.id || task.employee_id,
-          department_id: task.department?.id || task.department_id,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: authToken,
-          },
-        },
-      );
-      console.log("Task status updated successfully");
+      await api.put(`/api/tasks/${taskId}`, {
+        status_id: newStatusId,
+        name: task.name,
+        description: task.description,
+        due_date: task.due_date,
+        priority_id: task.priority?.id || task.priority_id,
+        employee_id: task.employee?.id || task.employee_id,
+        department_id: task.department?.id || task.department_id,
+      });
     } catch (err) {
       console.error("Failed to update task status:", err);
       // Revert if failed
       fetchTasks();
     }
-  };
+  }, [fetchTasks]);
 
   useEffect(() => {
     fetchTasks();
@@ -177,41 +141,39 @@ function HomePage({ departments, priorities, employees }: Props) {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
-  const handleRemoveFilter = (
-    id: number,
-    type: "department" | "priority" | "employee",
-  ) => {
-    switch (type) {
-      case "department":
-        setSelectedDepartments((prev) => prev.filter((item) => item !== id));
-        break;
-      case "priority":
-        setSelectedPriorities((prev) => prev.filter((item) => item !== id));
-        break;
-      case "employee":
-        setSelectedEmployees((prev) => prev.filter((item) => item !== id));
-        break;
-    }
-
-    setSelectedFilters((prev) =>
-      prev.filter((f) => f.id !== id || f.type !== type),
-    );
-  };
-
-  const handleFilterApply = (
-    type: "department" | "priority" | "employee",
-    ids: number[],
-  ) => {
-    const getName = (id: number): string => {
-      if (type === "department") {
-        return departments.find((d) => d.id === id)?.name || "";
-      } else if (type === "priority") {
-        return priorities.find((p) => p.id === id)?.name || "";
-      } else {
-        const emp = employees.find((e) => e.id === id);
-        return emp ? `${emp.name} ${emp.surname}` : "";
+  const handleRemoveFilter = useCallback(
+    (id: number, type: "department" | "priority" | "employee") => {
+      switch (type) {
+        case "department":
+          setSelectedDepartments((prev) => prev.filter((item) => item !== id));
+          break;
+        case "priority":
+          setSelectedPriorities((prev) => prev.filter((item) => item !== id));
+          break;
+        case "employee":
+          setSelectedEmployees((prev) => prev.filter((item) => item !== id));
+          break;
       }
-    };
+
+      setSelectedFilters((prev) =>
+        prev.filter((f) => f.id !== id || f.type !== type),
+      );
+    },
+    [],
+  );
+
+  const handleFilterApply = useCallback(
+    (type: "department" | "priority" | "employee", ids: number[]) => {
+      const getName = (id: number): string => {
+        if (type === "department") {
+          return departments.find((d) => d.id === id)?.name || "";
+        } else if (type === "priority") {
+          return priorities.find((p) => p.id === id)?.name || "";
+        } else {
+          const emp = employees.find((e) => e.id === id);
+          return emp ? `${emp.name} ${emp.surname}` : "";
+        }
+      };
 
     setSelectedFilters((prev) => {
       const otherFilters = prev.filter((f) => f.type !== type);
@@ -234,16 +196,16 @@ function HomePage({ departments, priorities, employees }: Props) {
         setSelectedEmployees(ids);
         break;
     }
-  };
+  }, [departments, priorities, employees]);
 
-  const handleClearAllFilters = () => {
+  const handleClearAllFilters = useCallback(() => {
     setSelectedDepartments([]);
     setSelectedPriorities([]);
     setSelectedEmployees([]);
     setSelectedFilters([]);
-  };
+  }, []);
 
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = useMemo(() => tasks.filter((task) => {
     const departmentMatch =
       selectedDepartments.length === 0 ||
       (task.department?.id && selectedDepartments.includes(task.department.id));
@@ -254,18 +216,17 @@ function HomePage({ departments, priorities, employees }: Props) {
       selectedEmployees.length === 0 ||
       (task.employee?.id && selectedEmployees.includes(task.employee.id));
     return departmentMatch && priorityMatch && employeeMatch;
-  });
+  }), [tasks, selectedDepartments, selectedPriorities, selectedEmployees]);
 
-  interface TasksByStatus {
-    [key: string]: TaskType[];
-  }
-
-  const tasksByStatus = {
-    "1": filteredTasks.filter((task) => task.status?.id === 1),
-    "2": filteredTasks.filter((task) => task.status?.id === 2),
-    "3": filteredTasks.filter((task) => task.status?.id === 3),
-    "4": filteredTasks.filter((task) => task.status?.id === 4),
-  } as TasksByStatus;
+  const tasksByStatus = useMemo(() => {
+    const grouped: Record<string, TaskType[]> = {
+      "1": filteredTasks.filter((task) => task.status?.id === 1),
+      "2": filteredTasks.filter((task) => task.status?.id === 2),
+      "3": filteredTasks.filter((task) => task.status?.id === 3),
+      "4": filteredTasks.filter((task) => task.status?.id === 4),
+    };
+    return grouped;
+  }, [filteredTasks]);
 
   const statusInfo = [
     { id: 1, title: "დასაწყები", color: "yellow" as const },

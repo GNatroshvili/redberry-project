@@ -3,6 +3,7 @@ import styles from "./ResponsibleEmployeer.module.css";
 import DropdownIcon from "../../icons/DropdownIcon";
 import { EmployeeType } from "../../types";
 import AddEmployeeButton from "../Buttons/AddEmployeeButton/AddEmployeeButton";
+import { AUTH_TOKEN } from "../../constants";
 
 type Props = {
   onEmployeeSelect?: (employeeId: number) => void;
@@ -22,11 +23,11 @@ function CustomDropdown({ onEmployeeSelect }: Props) {
     const fetchEmployees = async () => {
       try {
         const res = await fetch(
-          "https://momentum.redberryinternship.ge/api/employees",
+          "/api/employees",
           {
             signal: controller.signal,
             headers: {
-              Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
+              Authorization: AUTH_TOKEN,
             }
           }
         );

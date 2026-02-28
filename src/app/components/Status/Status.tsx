@@ -26,10 +26,13 @@ function CustomDropdown({
       const match = statuses.find((s) => s.id === initialStatus.id);
       if (match) {
         setSelectedStatus(match);
-        console.log("Set initialStatus from props:", match);
       }
+    } else if (!initialStatus && !selectedStatus && statuses.length > 0 && title) {
+      // Auto-select first status as default on create pages
+      setSelectedStatus(statuses[0]);
+      onStatusSelect?.(statuses[0].id);
     }
-  }, [initialStatus?.id, statuses]);
+  }, [initialStatus?.id, statuses, title]);
 
   const handleClick = (index: number) => {
     setOpenedId(index === openedId ? -1 : index);

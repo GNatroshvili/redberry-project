@@ -3,15 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import EmployeeForm from "../Form";
 import styles from "./EmployeeModal.module.css";
 import Image from "next/image";
-
-interface Employee {
-  first_name: string;
-  last_name: string;
-}
+import { DepartmentType } from "../../types";
+import { AUTH_TOKEN } from "../../constants";
 
 const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
-  const [employees, setEmployees] = useState<Employee[]>([]); 
-  const [departments, setDepartments] = useState([]);
+  const [departments, setDepartments] = useState<DepartmentType[]>([]);
   const dataFetchedRef = useRef(false);
 
   useEffect(() => {
@@ -20,22 +16,10 @@ const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
 
     const fetchData = async () => {
       try {
-        const empRes = await fetch(
-          "https://momentum.redberryinternship.ge/api/employees",
-          {
-            headers: {
-              Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
-            },
-          }
-        );
         const deptRes = await fetch(
-          "https://momentum.redberryinternship.ge/api/departments"
+          "/api/departments"
         );
-
-        const empData = await empRes.json();
         const deptData = await deptRes.json();
-
-        setEmployees(empData);
         setDepartments(deptData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -58,20 +42,6 @@ const EmployeeModal = ({ onClose }: { onClose: () => void }) => {
           />
         </div>
         <h2 className={styles.modalTitle}>თანამშრომლის დამატება</h2>
-
-        {employees.map(
-          (
-            employee: Employee,
-            idx: number 
-          ) => (
-            <div key={idx}>
-              <p>
-                {employee.first_name} {employee.last_name}
-              </p>
-            </div>
-          )
-        )}
-
         <EmployeeForm departments={departments} />
       </div>
     </div>

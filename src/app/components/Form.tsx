@@ -10,14 +10,11 @@ import styles from "./Form.module.css";
 import CancelButton from "./CancelButton/CancelButton";
 import DepartmentsList from "../components/DepartmentsList/DepartmentsList";
 import { DepartmentType } from "../types";
+import { MAX_IMAGE_SIZE, GEORGIAN_LATIN_REGEX, AUTH_TOKEN } from "../constants";
 
 type Props = {
   departments: DepartmentType[];
 };
-
-// Configure validation constants
-const MAX_IMAGE_SIZE = 600 * 1024; // 600KB in bytes
-const GEORGIAN_LATIN_REGEX = /^[a-zA-Z\u10A0-\u10FF\s']+$/;
 
 const validationSchema = Yup.object({
   name: Yup.string()
@@ -81,13 +78,13 @@ function EmployeeForm({ departments }: Props) {
 
         try {
           const res = await fetch(
-            "https://momentum.redberryinternship.ge/api/employees",
+            "/api/employees",
             {
               method: "POST",
               body: formData,
               headers: {
                 Accept: "application/json",
-                Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
+                Authorization: AUTH_TOKEN,
               },
             }
           );
