@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { EmployeeType } from "../types";
 import EmployeeTitle from "../components/EmployeeTitle/EmployeeTitle";
 import styles from "./EmployeeList.module.css"
+import { AUTH_TOKEN } from "../constants";
 
 type Props = {
   selectedValues: { [key: string]: boolean };
@@ -14,14 +15,17 @@ const EmployeeList = ({ selectedValues, onSelect }: Props) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchEmployees = async () => {
       try {
         const res = await fetch(
-          "https://momentum.redberryinternship.ge/api/employees",
+          "/api/employees",
           {
             headers: {
-              Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
+              Authorization: AUTH_TOKEN,
             },
+            signal: controller.signal,
           }
         );
 
@@ -30,13 +34,17 @@ const EmployeeList = ({ selectedValues, onSelect }: Props) => {
         const data = await res.json();
         setEmployees(data);
       } catch (err) {
-        setError((err as Error).message);
+        if (!controller.signal.aborted) {
+          setError((err as Error).message);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchEmployees();
+
+    return () => controller.abort();
   }, []);
 
   if (loading) return <p>Loading...</p>;

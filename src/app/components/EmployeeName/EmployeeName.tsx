@@ -26,7 +26,7 @@ const EmployeeName = ({ selectedFilters, onRemoveFilter }: Props) => {
           className={styles.filterWrapper}
         >
           <p className={styles.name}>
-            {filter.type === "employee" ? filter.id : filter.name}
+            {filter.name}
           </p>
           <img
             src="/delete-icon.svg"

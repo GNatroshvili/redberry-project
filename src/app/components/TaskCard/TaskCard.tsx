@@ -1,96 +1,25 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./TaskCard.module.css";
 import clsx from "clsx";
 import Difficulty from "../Details/Category/Difficulty/Difficulty";
 import Category from "../Details/Category/Category";
 import { TaskType } from "../../types";
-
-type Color = "pink" | "orange" | "blue" | "yellow";
+import {
+  getCategoryName,
+  getCategoryColor,
+  getPriorityColor,
+  formatDateGeorgian,
+} from "../../constants";
 
 type Props = {
   task: TaskType;
-  borderColor?: Color;
+  borderColor?: string;
   disableNavigation?: boolean;
 };
 
-const georgianMonthsShort = [
-  "იანვ",
-  "თებ",
-  "მარ",
-  "აპრ",
-  "მაი",
-  "ივნ",
-  "ივლ",
-  "აგვ",
-  "სექ",
-  "ოქტ",
-  "ნოემ",
-  "დეკ",
-];
-
-const TaskCard = ({ task, borderColor, disableNavigation }: Props) => {
+const TaskCard = React.memo(({ task, borderColor, disableNavigation }: Props) => {
   const router = useRouter();
-  const formatDateGeorgian = (
-    dateString: string | null | undefined,
-  ): string => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      console.error("Invalid date:", dateString);
-      return "N/A";
-    }
-    const year = date.getFullYear();
-    const monthIndex = date.getMonth();
-    const day = date.getDate();
-    return `${day} ${georgianMonthsShort[monthIndex]}, ${year}`;
-  };
-
-  const getPriorityColor = (
-    priorityName: string | undefined,
-  ): "red" | "orange" | "green" | undefined => {
-    if (priorityName === "მაღალი") return "red";
-    if (priorityName === "საშუალო") return "orange";
-    if (priorityName === "დაბალი") return "green";
-    return undefined;
-  };
-
-  const getCategoryName = (
-    CategoryName: string | undefined,
-  ):
-    | "დიზაინი"
-    | "მარკეტინგი"
-    | "ლოჯისტიკა"
-    | "ინფ. ტექ"
-    | "ადმინისტრაცია"
-    | "HR"
-    | "ფინანსები"
-    | "მედია"
-    | undefined => {
-    if (CategoryName === "დიზაინერების დეპარტამენტი") return "დიზაინი";
-    if (CategoryName === "გაყიდვები და მარკეტინგის დეპარტამენტი")
-      return "მარკეტინგი";
-    if (CategoryName === "ლოჯოსტიკის დეპარტამენტი") return "ლოჯისტიკა";
-    if (CategoryName === "ტექნოლოგიების დეპარტამენტი") return "ინფ. ტექ";
-    if (CategoryName === "ადმინისტრაციის დეპარტამენტი") return "ადმინისტრაცია";
-    if (CategoryName === "ადამიანური რესურსების დეპარტამენტი") return "HR";
-    if (CategoryName === "ფინანსების დეპარტამენტი") return "ფინანსები";
-    if (CategoryName === "მედიის დეპარტამენტი") return "მედია";
-    return undefined;
-  };
-
-  const getCategoryColor = (CategoryName: string | undefined): Color => {
-    if (CategoryName === "დიზაინერების დეპარტამენტი") return "pink";
-    if (CategoryName === "ლოჯოსტიკის დეპარტამენტი") return "blue";
-    if (CategoryName === "გაყიდვები და მარკეტინგის დეპარტამენტი")
-      return "orange";
-    if (CategoryName === "ტექნოლოგიების დეპარტამენტი") return "yellow";
-    if (CategoryName === "ადმინისტრაციის დეპარტამენტი") return "pink";
-    if (CategoryName === "ადამიანური რესურსების დეპარტამენტი") return "blue";
-    if (CategoryName === "ფინანსების დეპარტამენტი") return "orange";
-    if (CategoryName === "მედიის დეპარტამენტი") return "yellow";
-    return "orange";
-  };
 
   const getBorderColorStyle = () => {
     switch (task.status?.id) {
@@ -107,11 +36,11 @@ const TaskCard = ({ task, borderColor, disableNavigation }: Props) => {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (!disableNavigation) {
       router.push(`/task/${task.id}`);
     }
-  };
+  }, [disableNavigation, router, task.id]);
 
   return (
     <div
@@ -157,6 +86,8 @@ const TaskCard = ({ task, borderColor, disableNavigation }: Props) => {
       </div>
     </div>
   );
-};
+});
+
+TaskCard.displayName = "TaskCard";
 
 export default TaskCard;

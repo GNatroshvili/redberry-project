@@ -9,7 +9,7 @@ type Props = {
   task: TaskType;
 };
 
-const DraggableTaskCard = ({ task }: Props) => {
+const DraggableTaskCard = React.memo(({ task }: Props) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: task.id.toString(),
@@ -30,6 +30,8 @@ const DraggableTaskCard = ({ task }: Props) => {
       <TaskCard task={task} />
     </div>
   );
-};
+});
+
+DraggableTaskCard.displayName = "DraggableTaskCard";
 
 export default DraggableTaskCard;

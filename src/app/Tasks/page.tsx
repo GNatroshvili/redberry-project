@@ -115,7 +115,28 @@ export default function Home() {
     setSuccessMessage(null);
     setErrorMessage(null);
 
-    const controller = new AbortController();
+    // Validate required fields
+    if (!titleInputValue.trim() || titleInputValue.trim().length < 2) {
+      setErrorMessage("სათაური სავალდებულოა (მინიმუმ 2 სიმბოლო).");
+      return;
+    }
+    if (!selectedDepartment?.id) {
+      setErrorMessage("გთხოვთ აირჩიოთ დეპარტამენტი.");
+      return;
+    }
+    if (!selectedPriorityId) {
+      setErrorMessage("გთხოვთ აირჩიოთ პრიორიტეტი.");
+      return;
+    }
+    if (!selectedStatusId) {
+      setErrorMessage("გთხოვთ აირჩიოთ სტატუსი.");
+      return;
+    }
+    if (!selectedEmployeeId) {
+      setErrorMessage("გთხოვთ აირჩიოთ პასუხისმგებელი თანამშრომელი.");
+      return;
+    }
+
     const dueDate = selectedDeadline
       ? formatDateForDisplay(selectedDeadline)
       : null;
@@ -127,26 +148,13 @@ export default function Home() {
       status_id: selectedStatusId,
       employee_id: selectedEmployeeId,
       priority_id: selectedPriorityId,
-      department_id: selectedDepartment?.id,
+      department_id: selectedDepartment.id,
     };
 
     try {
-      const res = await fetch(
-        "https://momentum.redberryinternship.ge/api/tasks",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer 9e882e2f-3297-435e-b537-67817136c385",
-          },
-          body: JSON.stringify(taskData),
-          signal: controller.signal,
-        }
-      );
+      await api.post("/api/tasks", taskData);
 
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-      setSuccessMessage("Task created successfully!");
+      setSuccessMessage("დავალება წარმატებით შეიქმნა!");
 
       // Reset form
       setTitleInputValue("");
@@ -156,15 +164,22 @@ export default function Home() {
       setSelectedStatusId(null);
       setSelectedEmployeeId(null);
       setSelectedDeadline(null);
-      console.log("here");
       router.push("/");
     } catch (err) {
-      if (!controller.signal.aborted) {
-        console.error("Error creating task:", err);
-        setErrorMessage("Failed to create task.");
+      console.error("Error creating task:", err);
+      if (axios.isAxiosError(err) && err.response?.data) {
+        const data = err.response.data;
+        if (data.errors) {
+          const messages = Object.values(data.errors).flat().join(", ");
+          setErrorMessage(messages);
+        } else if (data.message) {
+          setErrorMessage(data.message);
+        } else {
+          setErrorMessage("დავალების შექმნა ვერ მოხერხდა.");
+        }
+      } else {
+        setErrorMessage("დავალების შექმნა ვერ მოხერხდა.");
       }
-    } finally {
-      controller.abort();
     }
   };
 
